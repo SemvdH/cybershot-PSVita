@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: hello_world
+# Project: cybershot
 # Configuration: Debug
 # =============================================================================
 
@@ -34,7 +34,7 @@ include rules.ninja
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/semtex99/vita/samples/hello_world2/build && /usr/bin/cmake -S/home/semtex99/vita/samples/hello_world2 -B/home/semtex99/vita/samples/hello_world2/build
+  COMMAND = cd /home/semtex99/vita/samples/cybershot-PSVita/build && /usr/bin/cmake -S/home/semtex99/vita/samples/cybershot-PSVita -B/home/semtex99/vita/samples/cybershot-PSVita/build
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -46,7 +46,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/semtex99/vita/samples/hello_world2/build && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd /home/semtex99/vita/samples/cybershot-PSVita/build && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -54,111 +54,111 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 
 
 #############################################
-# Utility command for hello_world.vpk
+# Utility command for cybershot.vpk
 
-build hello_world.vpk: phony CMakeFiles/hello_world.vpk hello_world.vpk.out hello_world.vpk_param.sfo hello_world.self
+build cybershot.vpk: phony CMakeFiles/cybershot.vpk cybershot.vpk.out cybershot.vpk_param.sfo cybershot.self
 
 
 #############################################
-# Utility command for hello_world.self
+# Utility command for cybershot.self
 
-build hello_world.self: phony CMakeFiles/hello_world.self hello_world.self.out hello_world.velf hello_world
+build cybershot.self: phony CMakeFiles/cybershot.self cybershot.self.out cybershot.velf cybershot
 
 # =============================================================================
-# Object build statements for EXECUTABLE target hello_world
+# Object build statements for EXECUTABLE target cybershot
 
 
 #############################################
-# Order-only phony target for hello_world
+# Order-only phony target for cybershot
 
-build cmake_object_order_depends_target_hello_world: phony || CMakeFiles/hello_world.dir
+build cmake_object_order_depends_target_cybershot: phony || CMakeFiles/cybershot.dir
 
-build CMakeFiles/hello_world.dir/src/main.c.obj: C_COMPILER__hello_world ../src/main.c || cmake_object_order_depends_target_hello_world
-  DEP_FILE = CMakeFiles/hello_world.dir/src/main.c.obj.d
+build CMakeFiles/cybershot.dir/src/main.c.obj: C_COMPILER__cybershot ../src/main.c || cmake_object_order_depends_target_cybershot
+  DEP_FILE = CMakeFiles/cybershot.dir/src/main.c.obj.d
   FLAGS = -Wl,-q -Wall -O0 -g -DDEBUG -D_DEBUG
   INCLUDES = -I../../common
-  OBJECT_DIR = CMakeFiles/hello_world.dir
-  OBJECT_FILE_DIR = CMakeFiles/hello_world.dir/src
-  TARGET_COMPILE_PDB = CMakeFiles/hello_world.dir/
-  TARGET_PDB = hello_world.pdb
+  OBJECT_DIR = CMakeFiles/cybershot.dir
+  OBJECT_FILE_DIR = CMakeFiles/cybershot.dir/src
+  TARGET_COMPILE_PDB = CMakeFiles/cybershot.dir/
+  TARGET_PDB = cybershot.pdb
 
-build CMakeFiles/hello_world.dir/home/semtex99/vita/samples/common/debugScreen.c.obj: C_COMPILER__hello_world /home/semtex99/vita/samples/common/debugScreen.c || cmake_object_order_depends_target_hello_world
-  DEP_FILE = CMakeFiles/hello_world.dir/home/semtex99/vita/samples/common/debugScreen.c.obj.d
+build CMakeFiles/cybershot.dir/home/semtex99/vita/samples/common/debugScreen.c.obj: C_COMPILER__cybershot /home/semtex99/vita/samples/common/debugScreen.c || cmake_object_order_depends_target_cybershot
+  DEP_FILE = CMakeFiles/cybershot.dir/home/semtex99/vita/samples/common/debugScreen.c.obj.d
   FLAGS = -Wl,-q -Wall -O0 -g -DDEBUG -D_DEBUG
   INCLUDES = -I../../common
-  OBJECT_DIR = CMakeFiles/hello_world.dir
-  OBJECT_FILE_DIR = CMakeFiles/hello_world.dir/home/semtex99/vita/samples/common
-  TARGET_COMPILE_PDB = CMakeFiles/hello_world.dir/
-  TARGET_PDB = hello_world.pdb
+  OBJECT_DIR = CMakeFiles/cybershot.dir
+  OBJECT_FILE_DIR = CMakeFiles/cybershot.dir/home/semtex99/vita/samples/common
+  TARGET_COMPILE_PDB = CMakeFiles/cybershot.dir/
+  TARGET_PDB = cybershot.pdb
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target hello_world
+# Link build statements for EXECUTABLE target cybershot
 
 
 #############################################
-# Link the executable hello_world
+# Link the executable cybershot
 
-build hello_world: C_EXECUTABLE_LINKER__hello_world CMakeFiles/hello_world.dir/src/main.c.obj CMakeFiles/hello_world.dir/home/semtex99/vita/samples/common/debugScreen.c.obj
+build cybershot: C_EXECUTABLE_LINKER__cybershot CMakeFiles/cybershot.dir/src/main.c.obj CMakeFiles/cybershot.dir/home/semtex99/vita/samples/common/debugScreen.c.obj
   FLAGS = -Wl,-q -Wall -O0 -g -DDEBUG -D_DEBUG
   LINK_FLAGS = -Wl,-z,nocopyreloc
   LINK_LIBRARIES = -lvita2d  -lSceLibKernel_stub  -lSceDisplay_stub  -lSceGxm_stub  -lSceSysmodule_stub  -lSceCtrl_stub  -lScePgf_stub  -lScePvf_stub  -lSceCommonDialog_stub  -lfreetype  -lpng  -ljpeg  -lz  -lm  -lc  -lSceAppMgr_stub
-  LINK_PATH = -L/home/semtex99/vita/samples/hello_world2/build
-  OBJECT_DIR = CMakeFiles/hello_world.dir
+  LINK_PATH = -L/home/semtex99/vita/samples/cybershot-PSVita/build
+  OBJECT_DIR = CMakeFiles/cybershot.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_COMPILE_PDB = CMakeFiles/hello_world.dir/
-  TARGET_FILE = hello_world
-  TARGET_PDB = hello_world.pdb
+  TARGET_COMPILE_PDB = CMakeFiles/cybershot.dir/
+  TARGET_FILE = cybershot
+  TARGET_PDB = cybershot.pdb
 
 
 #############################################
-# Custom command for CMakeFiles/hello_world.vpk
+# Custom command for CMakeFiles/cybershot.vpk
 
-build CMakeFiles/hello_world.vpk: CUSTOM_COMMAND hello_world.vpk.out || hello_world hello_world.self
-  COMMAND = cd /home/semtex99/vita/samples/hello_world2/build && /usr/bin/cmake -E copy /home/semtex99/vita/samples/hello_world2/build/hello_world.vpk.out hello_world.vpk
+build CMakeFiles/cybershot.vpk: CUSTOM_COMMAND cybershot.vpk.out || cybershot cybershot.self
+  COMMAND = cd /home/semtex99/vita/samples/cybershot-PSVita/build && /usr/bin/cmake -E copy /home/semtex99/vita/samples/cybershot-PSVita/build/cybershot.vpk.out cybershot.vpk
 
 
 #############################################
-# Custom command for hello_world.vpk.out
+# Custom command for cybershot.vpk.out
 
-build hello_world.vpk.out: CUSTOM_COMMAND hello_world.vpk_param.sfo hello_world.self ../sce_sys/icon0.png ../sce_sys/livearea/contents/bg.png ../sce_sys/livearea/contents/startup.png ../sce_sys/livearea/contents/template.xml || hello_world hello_world.self
-  COMMAND = cd /home/semtex99/vita/samples/hello_world2/build && /usr/local/vitasdk/bin/vita-pack-vpk -a /home/semtex99/vita/samples/hello_world2/sce_sys/icon0.png=sce_sys/icon0.png -a /home/semtex99/vita/samples/hello_world2/sce_sys/livearea/contents/bg.png=sce_sys/livearea/contents/bg.png -a /home/semtex99/vita/samples/hello_world2/sce_sys/livearea/contents/startup.png=sce_sys/livearea/contents/startup.png -a /home/semtex99/vita/samples/hello_world2/sce_sys/livearea/contents/template.xml=sce_sys/livearea/contents/template.xml -s /home/semtex99/vita/samples/hello_world2/build/hello_world.vpk_param.sfo -b /home/semtex99/vita/samples/hello_world2/build/hello_world.self /home/semtex99/vita/samples/hello_world2/build/hello_world.vpk.out
-  DESC = Building vpk hello_world.vpk
+build cybershot.vpk.out: CUSTOM_COMMAND cybershot.vpk_param.sfo cybershot.self ../sce_sys/icon0.png ../sce_sys/livearea/contents/bg.png ../sce_sys/livearea/contents/startup.png ../sce_sys/livearea/contents/template.xml || cybershot cybershot.self
+  COMMAND = cd /home/semtex99/vita/samples/cybershot-PSVita/build && /usr/local/vitasdk/bin/vita-pack-vpk -a /home/semtex99/vita/samples/cybershot-PSVita/sce_sys/icon0.png=sce_sys/icon0.png -a /home/semtex99/vita/samples/cybershot-PSVita/sce_sys/livearea/contents/bg.png=sce_sys/livearea/contents/bg.png -a /home/semtex99/vita/samples/cybershot-PSVita/sce_sys/livearea/contents/startup.png=sce_sys/livearea/contents/startup.png -a /home/semtex99/vita/samples/cybershot-PSVita/sce_sys/livearea/contents/template.xml=sce_sys/livearea/contents/template.xml -s /home/semtex99/vita/samples/cybershot-PSVita/build/cybershot.vpk_param.sfo -b /home/semtex99/vita/samples/cybershot-PSVita/build/cybershot.self /home/semtex99/vita/samples/cybershot-PSVita/build/cybershot.vpk.out
+  DESC = Building vpk cybershot.vpk
   restat = 1
 
 
 #############################################
-# Custom command for hello_world.vpk_param.sfo
+# Custom command for cybershot.vpk_param.sfo
 
-build hello_world.vpk_param.sfo: CUSTOM_COMMAND hello_world.self || hello_world hello_world.self
-  COMMAND = cd /home/semtex99/vita/samples/hello_world2/build && /usr/local/vitasdk/bin/vita-mksfoex -d PARENTAL_LEVEL=1 -s APP_VER=01.00 -s TITLE_ID=VSDK00007 Hello\ World /home/semtex99/vita/samples/hello_world2/build/hello_world.vpk_param.sfo
-  DESC = Generating param.sfo for hello_world.vpk
+build cybershot.vpk_param.sfo: CUSTOM_COMMAND cybershot.self || cybershot cybershot.self
+  COMMAND = cd /home/semtex99/vita/samples/cybershot-PSVita/build && /usr/local/vitasdk/bin/vita-mksfoex -d PARENTAL_LEVEL=1 -s APP_VER=01.00 -s TITLE_ID=CBSH01599 Cybershot /home/semtex99/vita/samples/cybershot-PSVita/build/cybershot.vpk_param.sfo
+  DESC = Generating param.sfo for cybershot.vpk
   restat = 1
 
 
 #############################################
-# Custom command for CMakeFiles/hello_world.self
+# Custom command for CMakeFiles/cybershot.self
 
-build CMakeFiles/hello_world.self: CUSTOM_COMMAND hello_world.self.out || hello_world
-  COMMAND = cd /home/semtex99/vita/samples/hello_world2/build && /usr/bin/cmake -E copy /home/semtex99/vita/samples/hello_world2/build/hello_world.self.out hello_world.self
+build CMakeFiles/cybershot.self: CUSTOM_COMMAND cybershot.self.out || cybershot
+  COMMAND = cd /home/semtex99/vita/samples/cybershot-PSVita/build && /usr/bin/cmake -E copy /home/semtex99/vita/samples/cybershot-PSVita/build/cybershot.self.out cybershot.self
 
 
 #############################################
-# Custom command for hello_world.self.out
+# Custom command for cybershot.self.out
 
-build hello_world.self.out: CUSTOM_COMMAND hello_world.velf || hello_world
-  COMMAND = cd /home/semtex99/vita/samples/hello_world2/build && /usr/local/vitasdk/bin/vita-make-fself -c -s /home/semtex99/vita/samples/hello_world2/build/hello_world.velf /home/semtex99/vita/samples/hello_world2/build/hello_world.self.out
-  DESC = Creating SELF hello_world.self
+build cybershot.self.out: CUSTOM_COMMAND cybershot.velf || cybershot
+  COMMAND = cd /home/semtex99/vita/samples/cybershot-PSVita/build && /usr/local/vitasdk/bin/vita-make-fself -c -s /home/semtex99/vita/samples/cybershot-PSVita/build/cybershot.velf /home/semtex99/vita/samples/cybershot-PSVita/build/cybershot.self.out
+  DESC = Creating SELF cybershot.self
   restat = 1
 
 
 #############################################
-# Custom command for hello_world.velf
+# Custom command for cybershot.velf
 
-build hello_world.velf: CUSTOM_COMMAND hello_world || hello_world
-  COMMAND = cd /home/semtex99/vita/samples/hello_world2/build && /usr/local/vitasdk/bin/vita-elf-create /home/semtex99/vita/samples/hello_world2/build/hello_world /home/semtex99/vita/samples/hello_world2/build/hello_world.velf
-  DESC = Converting to Sony ELF hello_world.velf
+build cybershot.velf: CUSTOM_COMMAND cybershot || cybershot
+  COMMAND = cd /home/semtex99/vita/samples/cybershot-PSVita/build && /usr/local/vitasdk/bin/vita-elf-create /home/semtex99/vita/samples/cybershot-PSVita/build/cybershot /home/semtex99/vita/samples/cybershot-PSVita/build/cybershot.velf
+  DESC = Converting to Sony ELF cybershot.velf
   restat = 1
 
 # =============================================================================
@@ -170,9 +170,9 @@ build hello_world.velf: CUSTOM_COMMAND hello_world || hello_world
 # =============================================================================
 
 #############################################
-# Folder: /home/semtex99/vita/samples/hello_world2/build
+# Folder: /home/semtex99/vita/samples/cybershot-PSVita/build
 
-build all: phony hello_world.vpk hello_world.self hello_world
+build all: phony cybershot.vpk cybershot.self cybershot
 
 # =============================================================================
 # Unknown Build Time Dependencies.

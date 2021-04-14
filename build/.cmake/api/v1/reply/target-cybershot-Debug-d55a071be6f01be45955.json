@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "hello_world"
+			"path" : "cybershot"
 		}
 	],
 	"backtrace" : 1,
@@ -56,7 +56,7 @@
 			[
 				{
 					"backtrace" : 3,
-					"path" : "/home/semtex99/vita/samples/hello_world2/../common"
+					"path" : "/home/semtex99/vita/samples/cybershot-PSVita/../common"
 				}
 			],
 			"language" : "C",
@@ -67,7 +67,7 @@
 			]
 		}
 	],
-	"id" : "hello_world::@6890427a1f51a3e7e1df",
+	"id" : "cybershot::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -82,7 +82,7 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "-L/home/semtex99/vita/samples/hello_world2/build",
+				"fragment" : "-L/home/semtex99/vita/samples/cybershot-PSVita/build",
 				"role" : "libraryPath"
 			},
 			{
@@ -152,8 +152,8 @@
 		],
 		"language" : "C"
 	},
-	"name" : "hello_world",
-	"nameOnDisk" : "hello_world",
+	"name" : "cybershot",
+	"nameOnDisk" : "cybershot",
 	"paths" : 
 	{
 		"build" : ".",

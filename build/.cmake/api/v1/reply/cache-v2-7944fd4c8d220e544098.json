@@ -67,7 +67,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/semtex99/vita/samples/hello_world2/build"
+			"value" : "/home/semtex99/vita/samples/cybershot-PSVita/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -591,7 +591,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/semtex99/vita/samples/hello_world2"
+			"value" : "/home/semtex99/vita/samples/cybershot-PSVita"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -823,7 +823,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "hello_world"
+			"value" : "cybershot"
 		},
 		{
 			"name" : "CMAKE_RANLIB",
@@ -1250,7 +1250,7 @@
 			"value" : ""
 		},
 		{
-			"name" : "hello_world_BINARY_DIR",
+			"name" : "cybershot_BINARY_DIR",
 			"properties" : 
 			[
 				{
@@ -1259,10 +1259,10 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/semtex99/vita/samples/hello_world2/build"
+			"value" : "/home/semtex99/vita/samples/cybershot-PSVita/build"
 		},
 		{
-			"name" : "hello_world_SOURCE_DIR",
+			"name" : "cybershot_SOURCE_DIR",
 			"properties" : 
 			[
 				{
@@ -1271,7 +1271,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/semtex99/vita/samples/hello_world2"
+			"value" : "/home/semtex99/vita/samples/cybershot-PSVita"
 		}
 	],
 	"kind" : "cache",

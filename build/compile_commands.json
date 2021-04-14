@@ -1,13 +1,13 @@
 [
 {
-  "directory": "/home/semtex99/vita/samples/hello_world2/build",
-  "command": "/usr/local/vitasdk/bin/arm-vita-eabi-gcc-10.1.0  -I../../common   -Wl,-q -Wall -O0 -g -DDEBUG -D_DEBUG   -o CMakeFiles/hello_world.dir/src/main.c.obj   -c /home/semtex99/vita/samples/hello_world2/src/main.c",
-  "file": "/home/semtex99/vita/samples/hello_world2/src/main.c"
+  "directory": "/home/semtex99/vita/samples/cybershot-PSVita/build",
+  "command": "/usr/local/vitasdk/bin/arm-vita-eabi-gcc-10.1.0  -I../../common   -Wl,-q -Wall -O0 -g -DDEBUG -D_DEBUG   -o CMakeFiles/cybershot.dir/src/main.c.obj   -c /home/semtex99/vita/samples/cybershot-PSVita/src/main.c",
+  "file": "/home/semtex99/vita/samples/cybershot-PSVita/src/main.c"
 },
 
 {
-  "directory": "/home/semtex99/vita/samples/hello_world2/build",
-  "command": "/usr/local/vitasdk/bin/arm-vita-eabi-gcc-10.1.0  -I../../common   -Wl,-q -Wall -O0 -g -DDEBUG -D_DEBUG   -o CMakeFiles/hello_world.dir/home/semtex99/vita/samples/common/debugScreen.c.obj   -c /home/semtex99/vita/samples/common/debugScreen.c",
+  "directory": "/home/semtex99/vita/samples/cybershot-PSVita/build",
+  "command": "/usr/local/vitasdk/bin/arm-vita-eabi-gcc-10.1.0  -I../../common   -Wl,-q -Wall -O0 -g -DDEBUG -D_DEBUG   -o CMakeFiles/cybershot.dir/home/semtex99/vita/samples/common/debugScreen.c.obj   -c /home/semtex99/vita/samples/common/debugScreen.c",
   "file": "/home/semtex99/vita/samples/common/debugScreen.c"
 }
 ]

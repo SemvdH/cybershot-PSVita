@@ -15,17 +15,17 @@ endif()
 
 ## Define project parameters here
 # Name of the project
-project(hello_world)
+project(cybershot)
 # This line adds Vita helper macros, must go after project definition in order
 # to build Vita specific artifacts (self/vpk).
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 ## Configuration options for this app
 # Display name (under bubble in LiveArea)
-set(VITA_APP_NAME "Hello World")
+set(VITA_APP_NAME "Cybershot")
 # Unique ID must be exactly 9 characters. Recommended: XXXXYYYYY where X =
 # unique string of developer and Y = a unique number for this app
-set(VITA_TITLEID  "VSDK00007")
+set(VITA_TITLEID  "CBSH01599")
 # Optional version string to show in LiveArea's more info screen
 set(VITA_VERSION  "01.00")
 

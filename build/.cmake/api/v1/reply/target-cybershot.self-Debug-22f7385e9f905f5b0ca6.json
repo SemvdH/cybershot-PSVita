@@ -42,11 +42,11 @@
 	[
 		{
 			"backtrace" : 3,
-			"id" : "hello_world::@6890427a1f51a3e7e1df"
+			"id" : "cybershot::@6890427a1f51a3e7e1df"
 		}
 	],
-	"id" : "hello_world.self::@6890427a1f51a3e7e1df",
-	"name" : "hello_world.self",
+	"id" : "cybershot.self::@6890427a1f51a3e7e1df",
+	"name" : "cybershot.self",
 	"paths" : 
 	{
 		"build" : ".",
@@ -76,25 +76,25 @@
 		{
 			"backtrace" : 2,
 			"isGenerated" : true,
-			"path" : "build/CMakeFiles/hello_world.self",
+			"path" : "build/CMakeFiles/cybershot.self",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/CMakeFiles/hello_world.self.rule",
+			"path" : "build/CMakeFiles/cybershot.self.rule",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/hello_world.self.out.rule",
+			"path" : "build/cybershot.self.out.rule",
 			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
-			"path" : "build/hello_world.velf.rule",
+			"path" : "build/cybershot.velf.rule",
 			"sourceGroupIndex" : 1
 		}
 	],

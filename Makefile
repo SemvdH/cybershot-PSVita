@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/semtex99/vita/samples/hello_world
+CMAKE_SOURCE_DIR = /home/semtex99/vita/samples/cybershot-PSVita
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/semtex99/vita/samples/hello_world
+CMAKE_BINARY_DIR = /home/semtex99/vita/samples/cybershot-PSVita
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/semtex99/vita/samples/hello_world/CMakeFiles /home/semtex99/vita/samples/hello_world/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/semtex99/vita/samples/cybershot-PSVita/CMakeFiles /home/semtex99/vita/samples/cybershot-PSVita/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/semtex99/vita/samples/hello_world/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/semtex99/vita/samples/cybershot-PSVita/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,43 +111,43 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named hello_world.vpk
+# Target rules for targets named cybershot.vpk
 
 # Build rule for target.
-hello_world.vpk: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 hello_world.vpk
-.PHONY : hello_world.vpk
+cybershot.vpk: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 cybershot.vpk
+.PHONY : cybershot.vpk
 
 # fast build rule for target.
-hello_world.vpk/fast:
-	$(MAKE) -f CMakeFiles/hello_world.vpk.dir/build.make CMakeFiles/hello_world.vpk.dir/build
-.PHONY : hello_world.vpk/fast
+cybershot.vpk/fast:
+	$(MAKE) -f CMakeFiles/cybershot.vpk.dir/build.make CMakeFiles/cybershot.vpk.dir/build
+.PHONY : cybershot.vpk/fast
 
 #=============================================================================
-# Target rules for targets named hello_world.self
+# Target rules for targets named cybershot.self
 
 # Build rule for target.
-hello_world.self: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 hello_world.self
-.PHONY : hello_world.self
+cybershot.self: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 cybershot.self
+.PHONY : cybershot.self
 
 # fast build rule for target.
-hello_world.self/fast:
-	$(MAKE) -f CMakeFiles/hello_world.self.dir/build.make CMakeFiles/hello_world.self.dir/build
-.PHONY : hello_world.self/fast
+cybershot.self/fast:
+	$(MAKE) -f CMakeFiles/cybershot.self.dir/build.make CMakeFiles/cybershot.self.dir/build
+.PHONY : cybershot.self/fast
 
 #=============================================================================
-# Target rules for targets named hello_world
+# Target rules for targets named cybershot
 
 # Build rule for target.
-hello_world: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 hello_world
-.PHONY : hello_world
+cybershot: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 cybershot
+.PHONY : cybershot
 
 # fast build rule for target.
-hello_world/fast:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/build
-.PHONY : hello_world/fast
+cybershot/fast:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/build
+.PHONY : cybershot/fast
 
 home/semtex99/vita/samples/common/debugScreen.obj: home/semtex99/vita/samples/common/debugScreen.c.obj
 
@@ -155,7 +155,7 @@ home/semtex99/vita/samples/common/debugScreen.obj: home/semtex99/vita/samples/co
 
 # target to build an object file
 home/semtex99/vita/samples/common/debugScreen.c.obj:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/home/semtex99/vita/samples/common/debugScreen.c.obj
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/home/semtex99/vita/samples/common/debugScreen.c.obj
 .PHONY : home/semtex99/vita/samples/common/debugScreen.c.obj
 
 home/semtex99/vita/samples/common/debugScreen.i: home/semtex99/vita/samples/common/debugScreen.c.i
@@ -164,7 +164,7 @@ home/semtex99/vita/samples/common/debugScreen.i: home/semtex99/vita/samples/comm
 
 # target to preprocess a source file
 home/semtex99/vita/samples/common/debugScreen.c.i:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/home/semtex99/vita/samples/common/debugScreen.c.i
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/home/semtex99/vita/samples/common/debugScreen.c.i
 .PHONY : home/semtex99/vita/samples/common/debugScreen.c.i
 
 home/semtex99/vita/samples/common/debugScreen.s: home/semtex99/vita/samples/common/debugScreen.c.s
@@ -173,7 +173,7 @@ home/semtex99/vita/samples/common/debugScreen.s: home/semtex99/vita/samples/comm
 
 # target to generate assembly for a file
 home/semtex99/vita/samples/common/debugScreen.c.s:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/home/semtex99/vita/samples/common/debugScreen.c.s
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/home/semtex99/vita/samples/common/debugScreen.c.s
 .PHONY : home/semtex99/vita/samples/common/debugScreen.c.s
 
 src/main.obj: src/main.c.obj
@@ -182,7 +182,7 @@ src/main.obj: src/main.c.obj
 
 # target to build an object file
 src/main.c.obj:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/main.c.obj
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/main.c.obj
 .PHONY : src/main.c.obj
 
 src/main.i: src/main.c.i
@@ -191,7 +191,7 @@ src/main.i: src/main.c.i
 
 # target to preprocess a source file
 src/main.c.i:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/main.c.i
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/main.c.i
 .PHONY : src/main.c.i
 
 src/main.s: src/main.c.s
@@ -200,7 +200,7 @@ src/main.s: src/main.c.s
 
 # target to generate assembly for a file
 src/main.c.s:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/main.c.s
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/main.c.s
 .PHONY : src/main.c.s
 
 # Help Target
@@ -211,9 +211,9 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... hello_world.vpk"
-	@echo "... hello_world.self"
-	@echo "... hello_world"
+	@echo "... cybershot.vpk"
+	@echo "... cybershot.self"
+	@echo "... cybershot"
 	@echo "... home/semtex99/vita/samples/common/debugScreen.obj"
 	@echo "... home/semtex99/vita/samples/common/debugScreen.i"
 	@echo "... home/semtex99/vita/samples/common/debugScreen.s"

@@ -6,7 +6,7 @@
 # It is included in the main 'build.ninja'.
 
 # =============================================================================
-# Project: hello_world
+# Project: cybershot
 # Configuration: Debug
 # =============================================================================
 # =============================================================================
@@ -22,7 +22,7 @@ rule CUSTOM_COMMAND
 #############################################
 # Rule for compiling C files.
 
-rule C_COMPILER__hello_world
+rule C_COMPILER__cybershot
   depfile = $DEP_FILE
   deps = gcc
   command = /usr/local/vitasdk/bin/arm-vita-eabi-gcc-10.1.0 $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out   -c $in
@@ -32,7 +32,7 @@ rule C_COMPILER__hello_world
 #############################################
 # Rule for linking C executable.
 
-rule C_EXECUTABLE_LINKER__hello_world
+rule C_EXECUTABLE_LINKER__cybershot
   command = $PRE_LINK && /usr/local/vitasdk/bin/arm-vita-eabi-gcc-10.1.0 $FLAGS  $LINK_FLAGS $in  -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking C executable $TARGET_FILE
   restat = $RESTAT
@@ -42,7 +42,7 @@ rule C_EXECUTABLE_LINKER__hello_world
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /usr/bin/cmake -S/home/semtex99/vita/samples/hello_world2 -B/home/semtex99/vita/samples/hello_world2/build
+  command = /usr/bin/cmake -S/home/semtex99/vita/samples/cybershot-PSVita -B/home/semtex99/vita/samples/cybershot-PSVita/build
   description = Re-running CMake...
   generator = 1
 

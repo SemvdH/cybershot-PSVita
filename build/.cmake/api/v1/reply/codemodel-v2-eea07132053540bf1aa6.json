@@ -28,7 +28,7 @@
 					[
 						0
 					],
-					"name" : "hello_world",
+					"name" : "cybershot",
 					"targetIndexes" : 
 					[
 						0,
@@ -41,23 +41,23 @@
 			[
 				{
 					"directoryIndex" : 0,
-					"id" : "hello_world::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-hello_world-Debug-56d898603bae97d3019a.json",
-					"name" : "hello_world",
+					"id" : "cybershot::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cybershot-Debug-d55a071be6f01be45955.json",
+					"name" : "cybershot",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
-					"id" : "hello_world.self::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-hello_world.self-Debug-6d68fe6fa28e42298fb5.json",
-					"name" : "hello_world.self",
+					"id" : "cybershot.self::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cybershot.self-Debug-22f7385e9f905f5b0ca6.json",
+					"name" : "cybershot.self",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
-					"id" : "hello_world.vpk::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-hello_world.vpk-Debug-b4f50dfcf6014a3be870.json",
-					"name" : "hello_world.vpk",
+					"id" : "cybershot.vpk::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cybershot.vpk-Debug-d00f9ae455939504ff79.json",
+					"name" : "cybershot.vpk",
 					"projectIndex" : 0
 				}
 			]
@@ -66,8 +66,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/semtex99/vita/samples/hello_world2/build",
-		"source" : "/home/semtex99/vita/samples/hello_world2"
+		"build" : "/home/semtex99/vita/samples/cybershot-PSVita/build",
+		"source" : "/home/semtex99/vita/samples/cybershot-PSVita"
 	},
 	"version" : 
 	{
