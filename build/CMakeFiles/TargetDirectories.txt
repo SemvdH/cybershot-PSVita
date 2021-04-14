@@ -1,5 +1,0 @@
-/home/semtex99/vita/samples/cybershot-PSVita/build/CMakeFiles/rebuild_cache.dir
-/home/semtex99/vita/samples/cybershot-PSVita/build/CMakeFiles/edit_cache.dir
-/home/semtex99/vita/samples/cybershot-PSVita/build/CMakeFiles/cybershot.vpk.dir
-/home/semtex99/vita/samples/cybershot-PSVita/build/CMakeFiles/cybershot.self.dir
-/home/semtex99/vita/samples/cybershot-PSVita/build/CMakeFiles/cybershot.dir
