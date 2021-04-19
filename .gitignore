@@ -86,3 +86,10 @@ CMakeUserPresets.json
 
 build
 build/**
+
+#project build files
+cybershot
+cybershot.self
+cybershot.velf
+cybershot.vpk
+cybershot.vpk_param.sfo
