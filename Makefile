@@ -203,6 +203,33 @@ src/main.c.s:
 	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/main.c.s
 .PHONY : src/main.c.s
 
+src/sprites/sprites.obj: src/sprites/sprites.c.obj
+
+.PHONY : src/sprites/sprites.obj
+
+# target to build an object file
+src/sprites/sprites.c.obj:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/sprites/sprites.c.obj
+.PHONY : src/sprites/sprites.c.obj
+
+src/sprites/sprites.i: src/sprites/sprites.c.i
+
+.PHONY : src/sprites/sprites.i
+
+# target to preprocess a source file
+src/sprites/sprites.c.i:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/sprites/sprites.c.i
+.PHONY : src/sprites/sprites.c.i
+
+src/sprites/sprites.s: src/sprites/sprites.c.s
+
+.PHONY : src/sprites/sprites.s
+
+# target to generate assembly for a file
+src/sprites/sprites.c.s:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/sprites/sprites.c.s
+.PHONY : src/sprites/sprites.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -220,6 +247,9 @@ help:
 	@echo "... src/main.obj"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/sprites/sprites.obj"
+	@echo "... src/sprites/sprites.i"
+	@echo "... src/sprites/sprites.s"
 .PHONY : help
 
 

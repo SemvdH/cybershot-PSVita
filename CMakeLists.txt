@@ -51,6 +51,7 @@ link_directories(
 # Add all the files needed to compile here
 add_executable(${PROJECT_NAME}
   src/main.c
+  src/sprites/sprites.c
   ../common/debugScreen.c
 )
 

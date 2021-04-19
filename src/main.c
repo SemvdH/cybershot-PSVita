@@ -8,6 +8,8 @@
 
 #include <vita2d.h>
 
+#include "sprites/sprites.h"
+
 // 14 april 2021: 11:00-15:00
 
 #define printf psvDebugScreenPrintf
@@ -35,6 +37,8 @@ int main(int argc, char *argv[])
 
 	memset(&pad, 0, sizeof(pad));
 
+	BULLET b1 = {1,200,200,RGBA8(255,0,255,255)};
+
 	while (1)
 	{
 		sceCtrlPeekBufferPositive(0, &pad, 1);
@@ -50,7 +54,9 @@ int main(int argc, char *argv[])
 		vita2d_pgf_draw_text(pgf, 700, 30, RGBA8(0,255,0,255), 1.0f, "PGF Font sample!");
 
 		vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0,255,0,255), 1.0f, "PVF Font sample!");
-	
+
+		sprites_draw_bullet(&b1);
+
 		vita2d_end_drawing();
 		vita2d_swap_buffers();
 	}
