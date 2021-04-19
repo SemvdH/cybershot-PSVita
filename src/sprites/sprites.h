@@ -8,7 +8,7 @@
  */
 typedef struct player_sprite_t
 {
-    /* data */
+    /* data to be added, pos, active (?)*/
 } PLAYER;
 
 /**
