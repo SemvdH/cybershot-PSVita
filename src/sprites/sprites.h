@@ -2,6 +2,10 @@
 #define SPRITES_H
 
 //TODO draw main player sprite
+/**
+ * @brief struct that holds the info for drawing the player
+ * 
+ */
 typedef struct player_sprite_t
 {
     /* data */
