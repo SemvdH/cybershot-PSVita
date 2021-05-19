@@ -230,6 +230,33 @@ src/sprites/sprites.c.s:
 	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/sprites/sprites.c.s
 .PHONY : src/sprites/sprites.c.s
 
+src/timing/timing.obj: src/timing/timing.c.obj
+
+.PHONY : src/timing/timing.obj
+
+# target to build an object file
+src/timing/timing.c.obj:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/timing/timing.c.obj
+.PHONY : src/timing/timing.c.obj
+
+src/timing/timing.i: src/timing/timing.c.i
+
+.PHONY : src/timing/timing.i
+
+# target to preprocess a source file
+src/timing/timing.c.i:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/timing/timing.c.i
+.PHONY : src/timing/timing.c.i
+
+src/timing/timing.s: src/timing/timing.c.s
+
+.PHONY : src/timing/timing.s
+
+# target to generate assembly for a file
+src/timing/timing.c.s:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/timing/timing.c.s
+.PHONY : src/timing/timing.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -250,6 +277,9 @@ help:
 	@echo "... src/sprites/sprites.obj"
 	@echo "... src/sprites/sprites.i"
 	@echo "... src/sprites/sprites.s"
+	@echo "... src/timing/timing.obj"
+	@echo "... src/timing/timing.i"
+	@echo "... src/timing/timing.s"
 .PHONY : help
 
 

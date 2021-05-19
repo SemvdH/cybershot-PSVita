@@ -23,6 +23,8 @@ typedef struct bullet_sprite_t
     unsigned int color; // color of the bullet
 } BULLET;
 
+
+
 /**
  * @brief function that draws the given bullet, if it is active
  * 
