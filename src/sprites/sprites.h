@@ -11,16 +11,18 @@ typedef struct player_sprite_t
     /* data to be added, pos, active (?)*/
 } PLAYER;
 
+
 /**
  * @brief a struct that holds a bullet sprite, basically a rectangle
  *        there will be at most a few bullets available
  */
 typedef struct bullet_sprite_t
 {
-    size_t active;      // whether or not the bullet should be drawn (0 or 1)
-    float x;            // the x position
-    float y;            // the y position
-    unsigned int color; // color of the bullet
+    size_t active;          // whether or not the bullet should be drawn (0 or 1)
+    float x;                // the x position
+    float y;                // the y position
+    unsigned int color;     // color of the bullet
+    float movement_speed;   // speed of the bullet (how much it should move each frame)
 } BULLET;
 
 

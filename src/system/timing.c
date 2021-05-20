@@ -17,3 +17,19 @@ uint8_t timing_get_fps(SceUInt64 dt)
 {
     return (1 / (dt / 1000.0));
 }
+
+void timing_update_timer(timing_timer* timer, SceUInt64 dt)
+{
+    timer->time += dt;
+}
+
+uint8_t timing_check_timer_elapsed(timing_timer* timer)
+{
+    if (timer->time > timer->timeout)
+    {
+        timer->time = 0;
+        timer->elapsed = 1;
+        return 1;
+    }
+    return 0;
+}

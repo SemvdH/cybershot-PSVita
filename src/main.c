@@ -5,6 +5,7 @@
 
 #include <psp2/ctrl.h>
 #include <psp2/kernel/processmgr.h>
+#include <sys/types.h>
 
 #include <vita2d.h>
 
@@ -23,10 +24,10 @@ size_t running = 1;
 
 stick_data left_stick = {0, 0}, right_stick = {0, 0};
 SceCtrlData pad;
-size_t cross_pressed = 0;
+uint8_t cross_pressed = 0;
 
 size_t bullet_count = 0;
-size_t current_bullet = 0;
+uint8_t current_bullet = 0;
 BULLET bullets[255];
 
 vita2d_pgf *pgf;
@@ -34,6 +35,9 @@ vita2d_pvf *pvf;
 
 SceUInt64 deltaTime = 0; // delta time in ms
 SceKernelSysClock sysclock;
+timing_timer bullet_timer = {0, 250, 0}; // 0 as starting time, 400 ms timeout, not elapsed
+
+timer_t bullt = 0;
 
 float x1_pos = 300, y1_pos = 50, x2_pos = 400, y2_pos = 50;
 
@@ -55,7 +59,7 @@ void generate_bullet()
 	bullets[current_bullet].active = 1;
 	bullets[current_bullet].x = x1_pos;
 	bullets[current_bullet].y = y1_pos;
-	bullets[current_bullet].color = RGBA8(100, 100, 0, 255);
+	bullets[current_bullet].color = RGBA8(255, 100, 0, 255);
 	current_bullet = (current_bullet + 1) % 254;
 }
 
@@ -74,7 +78,7 @@ void init()
 
 	for (int i = 0; i < 255; i++)
 	{
-		BULLET temp = {0, 0, 100, RGBA8(0, i, 255, 255)};
+		BULLET temp = {0, 0, 100, RGBA8(0, i, 255, 255), 300.0};
 		bullets[i] = temp;
 	}
 }
@@ -93,6 +97,9 @@ void update()
 	if (pad.buttons & SCE_CTRL_CROSS)
 		cross_pressed = 1;
 
+	timing_update_timer(&bullet_timer, deltaTime); // update timer
+	timing_check_timer_elapsed(&bullet_timer);
+
 	ctrl_input_get_leftstick(&pad, &left_stick);
 
 	if (abs(left_stick.x) > 15)
@@ -109,14 +116,19 @@ void update()
 	if (y1_pos >= SCREEN_HEIGTH)
 		y1_pos = SCREEN_HEIGTH - 1;
 
-	// TODO move to seperate file
 	if (cross_pressed)
-		generate_bullet();
+	{
+		if (bullet_timer.elapsed)
+		{
+			generate_bullet();
+			bullet_timer.elapsed = 0;
+		}
+	}
 
-	
+	// TODO move to seperate file
 	for (int i = 0; i < 255; i++)
 	{
-		bullets[i].y -= 100.0 * (deltaTime / 1000.0);
+		bullets[i].y -= bullets[i].movement_speed * (deltaTime / 1000.0);
 
 		if (bullets[i].y <= 0)
 			bullets[i].active = 0;
@@ -140,6 +152,10 @@ void draw()
 	vita2d_pgf_draw_text(pgf, 700, 30, RGBA8(0, 255, 0, 255), 1.0f, text);
 
 	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, fps);
+
+	char timertext[100];
+	sprintf(timertext, "time %lu", bullet_timer.time);
+	vita2d_pgf_draw_text(pgf, 10, 30, RGBA8(0, 255, 150, 255), 1.0f, timertext);
 
 	for (int i = 0; i < 255; i++)
 	{
