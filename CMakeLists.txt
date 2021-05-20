@@ -52,7 +52,8 @@ link_directories(
 add_executable(${PROJECT_NAME}
   src/main.c
   src/sprites/sprites.c
-  src/timing/timing.c
+  src/system/timing.c
+  src/system/control_input.c
   ../common/debugScreen.c
 )
 

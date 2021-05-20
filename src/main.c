@@ -9,11 +9,15 @@
 #include <vita2d.h>
 
 #include "sprites/sprites.h"
-#include "timing/timing.h"
+#include "system/timing.h"
+#include "system/control_input.h"
 
 // 14 april 2021: 11:00-15:00
 
 #define printf psvDebugScreenPrintf
+
+#define SCREEN_HEIGTH 544
+#define SCREEN_WIDTH 940
 
 // extern unsigned char _binary_image_png_start;
 
@@ -34,6 +38,7 @@ int main(int argc, char *argv[])
 
 	/* to enable analog sampling */
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
+	stick_data left_stick = {0, 0}, right_stick = {0,0};
 	SceCtrlData pad;
 	vita2d_pgf *pgf;
 	vita2d_pvf *pvf;
@@ -73,22 +78,29 @@ int main(int argc, char *argv[])
 		vita2d_start_drawing();
 		vita2d_clear_screen();
 
-		int16_t lxpos = -128 + pad.lx; // full left is 0 so -128 and full right is 255 so 128
-		char leftStick[50] = "left stick: ";
-		sprintf(leftStick, "left stick: %d", lxpos);
+		ctrl_input_get_leftstick(&pad, &left_stick);
 
-		vita2d_pgf_draw_text(pgf, 300, 30, RGBA8(255, 255, 0, 255), 1.0f, leftStick);
-		if (abs(lxpos) > 15)
-			x1 += (lxpos) * (deltaTime / 1000.0);
-		char xtext[50];
-		sprintf(xtext, "x: %f", x1);
+		// char leftStick[50] = "left stick: ";
+		// sprintf(leftStick, "left stick: %d", left_stick.x);
+		// vita2d_pgf_draw_text(pgf, 300, 30, RGBA8(255, 255, 0, 255), 1.0f, leftStick);
 
-		vita2d_pgf_draw_text(pgf, 200, 80, RGBA8(255, 0, 0, 255), 1.0f, xtext);
+		if (abs(left_stick.x) > 15)
+			x1 += ctrl_input_calc_value(left_stick.x, deltaTime);
+		if (abs(left_stick.y) > 15)
+			y1 += ctrl_input_calc_value(left_stick.y, deltaTime);
+		// char xtext[50];
+		// sprintf(xtext, "x: %f", x1);
+
+		// vita2d_pgf_draw_text(pgf, 200, 80, RGBA8(255, 0, 0, 255), 1.0f, xtext);
 
 		if (x1 <= 0)
 			x1 = 0;
-		if (x1 > 700)
-			x1 = 700;
+		if (x1 >= SCREEN_WIDTH)
+			x1 = SCREEN_WIDTH-1;
+		if (y1 <= 0)
+			y1 = 0;
+		if (y1 >= SCREEN_HEIGTH)
+			y1 = SCREEN_HEIGTH - 1;
 
 		vita2d_draw_rectangle(x1, y1, (float)10, (float)10, RGBA8(100, 100, 100, 255));
 		vita2d_draw_rectangle(x2, y2, (float)10, (float)10, RGBA8(169, 60, 23, 255));

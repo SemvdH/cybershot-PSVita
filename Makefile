@@ -230,32 +230,59 @@ src/sprites/sprites.c.s:
 	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/sprites/sprites.c.s
 .PHONY : src/sprites/sprites.c.s
 
-src/timing/timing.obj: src/timing/timing.c.obj
+src/system/control_input.obj: src/system/control_input.c.obj
 
-.PHONY : src/timing/timing.obj
+.PHONY : src/system/control_input.obj
 
 # target to build an object file
-src/timing/timing.c.obj:
-	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/timing/timing.c.obj
-.PHONY : src/timing/timing.c.obj
+src/system/control_input.c.obj:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/system/control_input.c.obj
+.PHONY : src/system/control_input.c.obj
 
-src/timing/timing.i: src/timing/timing.c.i
+src/system/control_input.i: src/system/control_input.c.i
 
-.PHONY : src/timing/timing.i
+.PHONY : src/system/control_input.i
 
 # target to preprocess a source file
-src/timing/timing.c.i:
-	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/timing/timing.c.i
-.PHONY : src/timing/timing.c.i
+src/system/control_input.c.i:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/system/control_input.c.i
+.PHONY : src/system/control_input.c.i
 
-src/timing/timing.s: src/timing/timing.c.s
+src/system/control_input.s: src/system/control_input.c.s
 
-.PHONY : src/timing/timing.s
+.PHONY : src/system/control_input.s
 
 # target to generate assembly for a file
-src/timing/timing.c.s:
-	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/timing/timing.c.s
-.PHONY : src/timing/timing.c.s
+src/system/control_input.c.s:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/system/control_input.c.s
+.PHONY : src/system/control_input.c.s
+
+src/system/timing.obj: src/system/timing.c.obj
+
+.PHONY : src/system/timing.obj
+
+# target to build an object file
+src/system/timing.c.obj:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/system/timing.c.obj
+.PHONY : src/system/timing.c.obj
+
+src/system/timing.i: src/system/timing.c.i
+
+.PHONY : src/system/timing.i
+
+# target to preprocess a source file
+src/system/timing.c.i:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/system/timing.c.i
+.PHONY : src/system/timing.c.i
+
+src/system/timing.s: src/system/timing.c.s
+
+.PHONY : src/system/timing.s
+
+# target to generate assembly for a file
+src/system/timing.c.s:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/system/timing.c.s
+.PHONY : src/system/timing.c.s
 
 # Help Target
 help:
@@ -277,9 +304,12 @@ help:
 	@echo "... src/sprites/sprites.obj"
 	@echo "... src/sprites/sprites.i"
 	@echo "... src/sprites/sprites.s"
-	@echo "... src/timing/timing.obj"
-	@echo "... src/timing/timing.i"
-	@echo "... src/timing/timing.s"
+	@echo "... src/system/control_input.obj"
+	@echo "... src/system/control_input.i"
+	@echo "... src/system/control_input.s"
+	@echo "... src/system/timing.obj"
+	@echo "... src/system/timing.i"
+	@echo "... src/system/timing.s"
 .PHONY : help
 
 
