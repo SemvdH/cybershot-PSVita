@@ -19,7 +19,22 @@
 #define SCREEN_HEIGTH 544
 #define SCREEN_WIDTH 940
 
-// extern unsigned char _binary_image_png_start;
+size_t running = 1;
+
+stick_data left_stick = {0, 0}, right_stick = {0, 0};
+SceCtrlData pad;
+size_t cross_pressed = 0;
+
+size_t bullet_count = 0;
+BULLET bullets[4 * sizeof(BULLET)];
+
+vita2d_pgf *pgf;
+vita2d_pvf *pvf;
+
+SceUInt64 deltaTime = 0; // delta time in ms
+SceKernelSysClock sysclock;
+
+float x1_pos = 300, y1_pos = 50, x2_pos = 400, y2_pos = 50;
 
 /**
  * @brief should be called when an unhandlable exception or error occurs. Triggers coredump.
@@ -33,16 +48,10 @@ __attribute__((__noreturn__)) void shit_yourself(void)
 	}
 }
 
-int main(int argc, char *argv[])
+void init()
 {
-
 	/* to enable analog sampling */
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
-	stick_data left_stick = {0, 0}, right_stick = {0,0};
-	SceCtrlData pad;
-	vita2d_pgf *pgf;
-	vita2d_pvf *pvf;
-	// vita2d_texture *image;
 
 	vita2d_init();
 	vita2d_set_clear_color(RGBA8(0x40, 0x40, 0x40, 0xFF));
@@ -50,77 +59,76 @@ int main(int argc, char *argv[])
 	pgf = vita2d_load_default_pgf();
 	pvf = vita2d_load_default_pvf();
 
-	/*
-	 * Load the statically compiled image.png file.
-	 */
-	// image = vita2d_load_PNG_buffer(&_binary_image_png_start);
-
 	memset(&pad, 0, sizeof(pad));
 
-	BULLET b1 = {1, 200, 200, RGBA8(255, 0, 255, 255)};
-
-	SceUInt64 deltaTime = 0; // delta time in ms
-	SceKernelSysClock sysclock;
-
-	float x1 = 300, y1 = 50, x2 = 400, y2 = 50;
-
-	while (1)
+	for (int i = 0; i < 4; i++)
 	{
-		deltaTime = timing_get_deltatime(&sysclock);
-		if (deltaTime < 0)
-			shit_yourself();
+		BULLET temp = {0, i * 100, 0, RGBA8(0, i * 50, 255, 255)};
+		bullets[i] = temp;
+	}
+}
 
-		sceCtrlPeekBufferPositive(0, &pad, 1);
+void update()
+{
+	deltaTime = timing_get_deltatime(&sysclock);
+	cross_pressed = 0;
+	if (deltaTime < 0)
+		shit_yourself();
 
-		if (pad.buttons & SCE_CTRL_START)
-			break;
+	sceCtrlPeekBufferPositive(0, &pad, 1);
 
-		vita2d_start_drawing();
-		vita2d_clear_screen();
+	if (pad.buttons & SCE_CTRL_START)
+		running = 0;
+	if (pad.buttons & SCE_CTRL_CROSS)
+		cross_pressed = 1;
 
-		ctrl_input_get_leftstick(&pad, &left_stick);
+	ctrl_input_get_leftstick(&pad, &left_stick);
 
-		// char leftStick[50] = "left stick: ";
-		// sprintf(leftStick, "left stick: %d", left_stick.x);
-		// vita2d_pgf_draw_text(pgf, 300, 30, RGBA8(255, 255, 0, 255), 1.0f, leftStick);
+	if (abs(left_stick.x) > 15)
+		x1_pos += ctrl_input_calc_value(left_stick.x, deltaTime);
+	if (abs(left_stick.y) > 15)
+		y1_pos += ctrl_input_calc_value(left_stick.y, deltaTime);
 
-		if (abs(left_stick.x) > 15)
-			x1 += ctrl_input_calc_value(left_stick.x, deltaTime);
-		if (abs(left_stick.y) > 15)
-			y1 += ctrl_input_calc_value(left_stick.y, deltaTime);
-		// char xtext[50];
-		// sprintf(xtext, "x: %f", x1);
+	if (x1_pos <= 0)
+		x1_pos = 0;
+	if (x1_pos >= SCREEN_WIDTH)
+		x1_pos = SCREEN_WIDTH - 1;
+	if (y1_pos <= 0)
+		y1_pos = 0;
+	if (y1_pos >= SCREEN_HEIGTH)
+		y1_pos = SCREEN_HEIGTH - 1;
+}
 
-		// vita2d_pgf_draw_text(pgf, 200, 80, RGBA8(255, 0, 0, 255), 1.0f, xtext);
+void draw()
+{
+	vita2d_start_drawing();
+	vita2d_clear_screen();
 
-		if (x1 <= 0)
-			x1 = 0;
-		if (x1 >= SCREEN_WIDTH)
-			x1 = SCREEN_WIDTH-1;
-		if (y1 <= 0)
-			y1 = 0;
-		if (y1 >= SCREEN_HEIGTH)
-			y1 = SCREEN_HEIGTH - 1;
+	vita2d_draw_rectangle(x1_pos, y1_pos, (float)10, (float)10, RGBA8(100, 100, 100, 255));
+	vita2d_draw_rectangle(x2_pos, y2_pos, (float)10, (float)10, RGBA8(169, 60, 23, 255));
 
-		vita2d_draw_rectangle(x1, y1, (float)10, (float)10, RGBA8(100, 100, 100, 255));
-		vita2d_draw_rectangle(x2, y2, (float)10, (float)10, RGBA8(169, 60, 23, 255));
+	char text[80] = "process time: ";
+	sprintf(text, "%lld ms", deltaTime);
 
-		// vita2d_draw_texture(image, 100, 100);
+	char fps[15] = "fps: ";
+	sprintf(fps, "%d", timing_get_fps(deltaTime));
 
-		char text[80] = "process time: ";
-		sprintf(text, "%lld ms", deltaTime);
+	vita2d_pgf_draw_text(pgf, 700, 30, RGBA8(0, 255, 0, 255), 1.0f, text);
 
-		char fps[15] = "fps: ";
-		sprintf(fps, "%d", timing_get_fps(deltaTime));
+	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, fps);
 
-		vita2d_pgf_draw_text(pgf, 700, 30, RGBA8(0, 255, 0, 255), 1.0f, text);
+	vita2d_end_drawing();
+	vita2d_swap_buffers();
+}
 
-		vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, fps);
+int main(int argc, char *argv[])
+{
+	init();
 
-		sprites_draw_bullet(&b1);
-
-		vita2d_end_drawing();
-		vita2d_swap_buffers();
+	while (running)
+	{
+		update();
+		draw();
 	}
 
 	/*
