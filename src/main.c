@@ -26,7 +26,8 @@ SceCtrlData pad;
 size_t cross_pressed = 0;
 
 size_t bullet_count = 0;
-BULLET bullets[4 * sizeof(BULLET)];
+size_t current_bullet = 0;
+BULLET bullets[255];
 
 vita2d_pgf *pgf;
 vita2d_pvf *pvf;
@@ -48,6 +49,16 @@ __attribute__((__noreturn__)) void shit_yourself(void)
 	}
 }
 
+void generate_bullet()
+{
+	// {1, x1_pos, y1_pos, RGBA8(100, 100, 0, 255)};
+	bullets[current_bullet].active = 1;
+	bullets[current_bullet].x = x1_pos;
+	bullets[current_bullet].y = y1_pos;
+	bullets[current_bullet].color = RGBA8(100, 100, 0, 255);
+	current_bullet = (current_bullet + 1) % 254;
+}
+
 void init()
 {
 	/* to enable analog sampling */
@@ -61,9 +72,9 @@ void init()
 
 	memset(&pad, 0, sizeof(pad));
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 255; i++)
 	{
-		BULLET temp = {0, i * 100, 0, RGBA8(0, i * 50, 255, 255)};
+		BULLET temp = {0, 0, 100, RGBA8(0, i, 255, 255)};
 		bullets[i] = temp;
 	}
 }
@@ -97,6 +108,19 @@ void update()
 		y1_pos = 0;
 	if (y1_pos >= SCREEN_HEIGTH)
 		y1_pos = SCREEN_HEIGTH - 1;
+
+	// TODO move to seperate file
+	if (cross_pressed)
+		generate_bullet();
+
+	
+	for (int i = 0; i < 255; i++)
+	{
+		bullets[i].y -= 100.0 * (deltaTime / 1000.0);
+
+		if (bullets[i].y <= 0)
+			bullets[i].active = 0;
+	}
 }
 
 void draw()
@@ -116,6 +140,11 @@ void draw()
 	vita2d_pgf_draw_text(pgf, 700, 30, RGBA8(0, 255, 0, 255), 1.0f, text);
 
 	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, fps);
+
+	for (int i = 0; i < 255; i++)
+	{
+		sprites_draw_bullet(&bullets[i]);
+	}
 
 	vita2d_end_drawing();
 	vita2d_swap_buffers();
