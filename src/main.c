@@ -20,15 +20,17 @@
 #define SCREEN_HEIGTH 544
 #define SCREEN_WIDTH 940
 
-size_t running = 1;
+size_t running = 1, drawing_circle = 0;
 
 stick_data left_stick = {0, 0}, right_stick = {0, 0};
 SceCtrlData pad;
 uint8_t cross_pressed = 0;
 
-size_t bullet_count = 0;
 uint8_t current_bullet = 0;
 BULLET bullets[255];
+
+uint8_t current_smoke_particle = 0;
+SMOKE_PARTICLE smoke_particles[255];
 
 vita2d_pgf *pgf;
 vita2d_pvf *pvf;
@@ -39,7 +41,7 @@ timing_timer bullet_timer = {0, 250, 0}; // 0 as starting time, 400 ms timeout, 
 
 timer_t bullt = 0;
 
-float x1_pos = 300, y1_pos = 50, x2_pos = 400, y2_pos = 50;
+float player_x = 300, player_y = 50, x2_pos = 400, y2_pos = 50, radius = 5.0;
 
 /**
  * @brief should be called when an unhandlable exception or error occurs. Triggers coredump.
@@ -57,10 +59,20 @@ void generate_bullet()
 {
 	// {1, x1_pos, y1_pos, RGBA8(100, 100, 0, 255)};
 	bullets[current_bullet].active = 1;
-	bullets[current_bullet].x = x1_pos;
-	bullets[current_bullet].y = y1_pos;
+	bullets[current_bullet].x = player_x;
+	bullets[current_bullet].y = player_y - SHIP_HEIGHT;
 	bullets[current_bullet].color = RGBA8(255, 100, 0, 255);
 	current_bullet = (current_bullet + 1) % 254;
+}
+
+void generate_smoke_particle()
+{
+	smoke_particles[current_smoke_particle].active = 1;
+	smoke_particles[current_smoke_particle].x = player_x;
+	smoke_particles[current_smoke_particle].y = player_y - SHIP_HEIGHT;
+	smoke_particles[current_smoke_particle].radius = SMOKE_START_RADIUS;
+	smoke_particles[current_smoke_particle].explosion_direction = 1;
+	current_smoke_particle = (current_smoke_particle + 1) % 254;
 }
 
 void init()
@@ -80,6 +92,12 @@ void init()
 	{
 		BULLET temp = {0, 0, 100, RGBA8(0, i, 255, 255), 300.0};
 		bullets[i] = temp;
+	}
+
+	for (int i = 0; i < 255; i++)
+	{
+		SMOKE_PARTICLE s = {0, 0, 0, SMOKE_START_RADIUS};
+		smoke_particles[i] = s;
 	}
 }
 
@@ -101,20 +119,21 @@ void update()
 	timing_check_timer_elapsed(&bullet_timer);
 
 	ctrl_input_get_leftstick(&pad, &left_stick);
+	// ctrl_input_get_rightstick(&pad, &right_stick);
 
 	if (abs(left_stick.x) > 15)
-		x1_pos += ctrl_input_calc_value(left_stick.x, deltaTime);
+		player_x += ctrl_input_calc_value(left_stick.x, deltaTime);
 	if (abs(left_stick.y) > 15)
-		y1_pos += ctrl_input_calc_value(left_stick.y, deltaTime);
+		player_y += ctrl_input_calc_value(left_stick.y, deltaTime);
 
-	if (x1_pos <= 0)
-		x1_pos = 0;
-	if (x1_pos >= SCREEN_WIDTH)
-		x1_pos = SCREEN_WIDTH - 1;
-	if (y1_pos <= 0)
-		y1_pos = 0;
-	if (y1_pos >= SCREEN_HEIGTH)
-		y1_pos = SCREEN_HEIGTH - 1;
+	if (player_x <= 0)
+		player_x = 0;
+	if (player_x >= SCREEN_WIDTH)
+		player_x = SCREEN_WIDTH - 1;
+	if (player_y <= 0)
+		player_y = 0;
+	if (player_y >= SCREEN_HEIGTH)
+		player_y = SCREEN_HEIGTH - 1;
 
 	if (cross_pressed)
 	{
@@ -122,16 +141,26 @@ void update()
 		{
 			generate_bullet();
 			bullet_timer.elapsed = 0;
+			generate_smoke_particle();
 		}
 	}
 
-	// TODO move to seperate file
 	for (int i = 0; i < 255; i++)
 	{
 		bullets[i].y -= bullets[i].movement_speed * (deltaTime / 1000.0);
 
 		if (bullets[i].y <= 0)
+		{
 			bullets[i].active = 0;
+		}
+
+		smoke_particles[i].radius += smoke_particles[i].explosion_direction * (SMOKE_DISSAPPEAR_SPEED * (deltaTime / 1000.0)) * (SMOKE_MAX_RADIUS/smoke_particles[i].radius);
+		
+		if (smoke_particles[i].radius >= SMOKE_MAX_RADIUS)
+			smoke_particles[i].explosion_direction = -1;
+
+		if (smoke_particles[i].radius <= 0)
+			smoke_particles[i].active = 0;
 	}
 }
 
@@ -140,8 +169,8 @@ void draw()
 	vita2d_start_drawing();
 	vita2d_clear_screen();
 
-	vita2d_draw_rectangle(x1_pos, y1_pos, (float)10, (float)10, RGBA8(100, 100, 100, 255));
-	vita2d_draw_rectangle(x2_pos, y2_pos, (float)10, (float)10, RGBA8(169, 60, 23, 255));
+	sprites_draw_player(player_x, player_y, 3.0);
+	// vita2d_draw_rectangle(x2_pos, y2_pos, (float)10, (float)10, RGBA8(169, 60, 23, 255));
 
 	char text[80] = "process time: ";
 	sprintf(text, "%lld ms", deltaTime);
@@ -160,6 +189,7 @@ void draw()
 	for (int i = 0; i < 255; i++)
 	{
 		sprites_draw_bullet(&bullets[i]);
+		sprites_draw_smoke_circle(&smoke_particles[i]);
 	}
 
 	vita2d_end_drawing();

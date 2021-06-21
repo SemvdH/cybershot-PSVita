@@ -54,6 +54,7 @@ add_executable(${PROJECT_NAME}
   src/sprites/sprites.c
   src/system/timing.c
   src/system/control_input.c
+  src/toolbox/toolbox.c
   ../common/debugScreen.c
 )
 
