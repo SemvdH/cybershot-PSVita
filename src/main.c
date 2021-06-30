@@ -40,6 +40,7 @@ SceKernelSysClock sysclock;
 timing_timer bullet_timer = {0, 250, 0}; // 0 as starting time, 400 ms timeout, not elapsed
 
 timer_t bullt = 0;
+ENEMY_SPRITE simple_enemies[SIMPLE_ENEMY_MAX_AMOUNT];
 
 float player_x = 300, player_y = 50, x2_pos = 400, y2_pos = 50, radius = 5.0;
 
@@ -58,7 +59,7 @@ __attribute__((__noreturn__)) void shit_yourself(void)
 void generate_bullet()
 {
 	// {1, x1_pos, y1_pos, RGBA8(100, 100, 0, 255)};
-	bullets[current_bullet].active = 1;
+	bullets[current_bullet].active = ACTIVE;
 	bullets[current_bullet].x = player_x;
 	bullets[current_bullet].y = player_y - SHIP_HEIGHT;
 	bullets[current_bullet].color = RGBA8(255, 100, 0, 255);
@@ -67,7 +68,7 @@ void generate_bullet()
 
 void generate_smoke_particle()
 {
-	smoke_particles[current_smoke_particle].active = 1;
+	smoke_particles[current_smoke_particle].active = ACTIVE;
 	smoke_particles[current_smoke_particle].x = player_x;
 	smoke_particles[current_smoke_particle].y = player_y - SHIP_HEIGHT;
 	smoke_particles[current_smoke_particle].radius = SMOKE_START_RADIUS;
@@ -87,17 +88,23 @@ void init()
 	pvf = vita2d_load_default_pvf();
 
 	memset(&pad, 0, sizeof(pad));
-
-	for (int i = 0; i < 255; i++)
+	int i;
+	for (i = 0; i < 255; i++)
 	{
-		BULLET temp = {0, 0, 100, RGBA8(0, i, 255, 255), 300.0};
+		BULLET temp = {NONACTIVE, 0, 100, RGBA8(0, i, 255, 255), 300.0};
 		bullets[i] = temp;
 	}
 
-	for (int i = 0; i < 255; i++)
+	for (i = 0; i < 255; i++)
 	{
-		SMOKE_PARTICLE s = {0, 0, 0, SMOKE_START_RADIUS};
+		SMOKE_PARTICLE s = {NONACTIVE, 0, 0, SMOKE_START_RADIUS};
 		smoke_particles[i] = s;
+	}
+
+	for (i = 0; i < SIMPLE_ENEMY_MAX_AMOUNT; i++)
+	{
+		ENEMY_SPRITE e = {ACTIVE, SIMPLE, 20 * i + 10, 10, RGBA8(245, 90, 66, 255), 1.0};
+		simple_enemies[i] = e;
 	}
 }
 
@@ -154,8 +161,8 @@ void update()
 			bullets[i].active = 0;
 		}
 
-		smoke_particles[i].radius += smoke_particles[i].explosion_direction * (SMOKE_DISSAPPEAR_SPEED * (deltaTime / 1000.0)) * (SMOKE_MAX_RADIUS/smoke_particles[i].radius);
-		
+		smoke_particles[i].radius += smoke_particles[i].explosion_direction * (SMOKE_DISSAPPEAR_SPEED * (deltaTime / 1000.0)) * (SMOKE_MAX_RADIUS / smoke_particles[i].radius);
+
 		if (smoke_particles[i].radius >= SMOKE_MAX_RADIUS)
 			smoke_particles[i].explosion_direction = -1;
 
@@ -169,11 +176,11 @@ void draw()
 	vita2d_start_drawing();
 	vita2d_clear_screen();
 
-	sprites_draw_player(player_x, player_y, 3.0);
+	sprites_draw_player(player_x, player_y, PLAYER_SCALE);
 	// vita2d_draw_rectangle(x2_pos, y2_pos, (float)10, (float)10, RGBA8(169, 60, 23, 255));
 
 	char text[80] = "process time: ";
-	sprintf(text, "%lld ms", deltaTime);
+	sprintf(text, "%f", simple_enemies[5].x);
 
 	char fps[15] = "fps: ";
 	sprintf(fps, "%d", timing_get_fps(deltaTime));
@@ -190,6 +197,11 @@ void draw()
 	{
 		sprites_draw_bullet(&bullets[i]);
 		sprites_draw_smoke_circle(&smoke_particles[i]);
+	}
+
+	for (int i = 0; i < SIMPLE_ENEMY_MAX_AMOUNT; i++)
+	{
+		sprites_draw_enemy(&simple_enemies[i]);
 	}
 
 	vita2d_end_drawing();
