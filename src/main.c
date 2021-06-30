@@ -179,13 +179,18 @@ void draw()
 	sprites_draw_player(player_x, player_y, PLAYER_SCALE);
 	// vita2d_draw_rectangle(x2_pos, y2_pos, (float)10, (float)10, RGBA8(169, 60, 23, 255));
 
-	char text[80] = "process time: ";
-	sprintf(text, "%f", simple_enemies[5].x);
+	vita2d_draw_rectangle(300, 50, 30, 30, RGBA8(255, 0, 255, 255));
+
+	size_t collision_player = toolbox_is_collision(player_x, player_y - (PLAYER_SCALE * SHIP_HEIGHT)/2,SHIP_WIDTH * PLAYER_SCALE, SHIP_HEIGHT * PLAYER_SCALE, 300+15,50+15,30,30);
+	if (collision_player)
+	{
+		vita2d_pgf_draw_text(pgf, 700, 30, RGBA8(0, 255, 0, 255), 1.0f, "collision");
+	} else {
+		vita2d_pgf_draw_text(pgf, 700, 30, RGBA8(0, 255, 0, 255), 1.0f, "no col");
+	}
 
 	char fps[15] = "fps: ";
 	sprintf(fps, "%d", timing_get_fps(deltaTime));
-
-	vita2d_pgf_draw_text(pgf, 700, 30, RGBA8(0, 255, 0, 255), 1.0f, text);
 
 	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, fps);
 
