@@ -52,10 +52,10 @@ void sprites_draw_enemy(ENEMY_SPRITE *enemy)
 
 void sprites_draw_simple_enemy(ENEMY_SPRITE *enemy)
 {
-    vita2d_draw_line(enemy->x - 9.0, enemy->y, enemy->x, enemy->y + 9.0, enemy->color);
-    vita2d_draw_line(enemy->x, enemy->y + 9.0, enemy->x + 9.0, enemy->y, enemy->color);
-    vita2d_draw_line(enemy->x + 9.0, enemy->y, enemy->x, enemy->y - 9.0, enemy->color);
-    vita2d_draw_line(enemy->x, enemy->y - 9.0, enemy->x - 9.0, enemy->y, enemy->color);
+    vita2d_draw_line(enemy->x - SIMPLE_ENEMY_SIZE, enemy->y, enemy->x, enemy->y + SIMPLE_ENEMY_SIZE, enemy->color);
+    vita2d_draw_line(enemy->x, enemy->y + SIMPLE_ENEMY_SIZE, enemy->x + SIMPLE_ENEMY_SIZE, enemy->y, enemy->color);
+    vita2d_draw_line(enemy->x + SIMPLE_ENEMY_SIZE, enemy->y, enemy->x, enemy->y - SIMPLE_ENEMY_SIZE, enemy->color);
+    vita2d_draw_line(enemy->x, enemy->y - SIMPLE_ENEMY_SIZE, enemy->x - SIMPLE_ENEMY_SIZE, enemy->y, enemy->color);
 }
 
 void sprites_draw_complex_enemy(ENEMY_SPRITE *enemy)

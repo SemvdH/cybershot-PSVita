@@ -1,6 +1,7 @@
 #ifndef TOOLBOX_H
 
 #include <stdlib.h>
+#include "../sprites/sprites.h"
 
 /**
  * @brief generates a random float between the given floats
@@ -21,8 +22,8 @@ float toolbox_random_float(float a, float b);
  * @param y2 the center y of the second object
  * @param width2 the width of the second object
  * @param height2 the heigth of the second object
- * @return size_t 0 if no collision, 1 if there is a collision.
+ * @return uint8_t 0 if no collision, 1 if there is a collision.
  */
-size_t toolbox_is_collision(float x1, float y1, float width1, float heigth1, float x2, float y2, float width2, float height2);
+uint8_t toolbox_is_collision(float x1, float y1, float width1, float heigth1, float x2, float y2, float width2, float height2);
 
 #endif // !TOOLBOX_H

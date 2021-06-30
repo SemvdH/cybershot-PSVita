@@ -19,8 +19,10 @@
 
 #define SCREEN_HEIGTH 544
 #define SCREEN_WIDTH 940
+#define SIMPLE_ENEMY_MAX_AMOUNT 20
+#define BULLET_MARGIN 5.0 // extra hitbox space to make sure bullets hit
 
-size_t running = 1, drawing_circle = 0;
+uint8_t running = 1, drawing_circle = 0;
 
 stick_data left_stick = {0, 0}, right_stick = {0, 0};
 SceCtrlData pad;
@@ -40,7 +42,9 @@ SceKernelSysClock sysclock;
 timing_timer bullet_timer = {0, 250, 0}; // 0 as starting time, 400 ms timeout, not elapsed
 
 timer_t bullt = 0;
-ENEMY_SPRITE simple_enemies[SIMPLE_ENEMY_MAX_AMOUNT];
+
+ENEMY_SPRITE enemies[SIMPLE_ENEMY_MAX_AMOUNT];
+uint32_t enemy_count = 0;
 
 float player_x = 300, player_y = 50, x2_pos = 400, y2_pos = 50, radius = 5.0;
 
@@ -55,6 +59,8 @@ __attribute__((__noreturn__)) void shit_yourself(void)
 		*(int *)(0xAA) = 0x55; // trigger coredump
 	}
 }
+
+// ------------------------ GENERATE SPRITES ------------------
 
 void generate_bullet()
 {
@@ -75,6 +81,77 @@ void generate_smoke_particle()
 	smoke_particles[current_smoke_particle].explosion_direction = 1;
 	current_smoke_particle = (current_smoke_particle + 1) % 254;
 }
+
+// ------------------------ END GENERATE SPRITES ------------------
+
+// ------------------------ COLLISION ------------------
+
+/**
+ * @brief checks if a bullet has hit the given object
+ * 
+ * @param bullet the bullet to check for
+ * @param x1 the x pos of the center of the other object
+ * @param x2 the y pos of the center of the other object
+ * @param width the width of the other object
+ * @param heigth the heigth of the other object
+ * @return uint8_t 0 if no collision, 1 if there is a collision.
+ */
+uint8_t bullet_is_collision(BULLET *bullet, float x, float y, float width, float heigth)
+{
+	return toolbox_is_collision(bullet->x + BULLET_WIDTH / 2.0, bullet->y + BULLET_HEIGTH / 2.0, BULLET_WIDTH + BULLET_MARGIN, BULLET_HEIGTH, x, y, width, heigth);
+}
+
+/**
+ * @brief checks wether a bullet has hit an enemy
+ * 
+ * @param bullet the bulle to check for
+ * @param enemy the enemy to check for
+ * @return uint8_t 0 if no collision, 1 if there is a collision
+ */
+uint8_t bullet_hit_enemy(BULLET *bullet, ENEMY_SPRITE *enemy)
+{
+	if (enemy->enemy_type == SIMPLE)
+	{
+		return bullet_is_collision(bullet, enemy->x, enemy->y, SIMPLE_ENEMY_SIZE, SIMPLE_ENEMY_SIZE);
+	} else if (enemy->enemy_type == COMPLEX)
+	{
+		return bullet_is_collision(bullet, enemy->x, enemy->y, COMPLEX_ENEMY_SIZE, COMPLEX_ENEMY_SIZE);
+	}
+
+	return 0;
+}
+
+/**
+ * @brief checks the collision for all bullets, also checks for:
+ * - enemies
+ * 
+ */
+void check_bullet_collisions()
+{
+	for (int e = 0; e < enemy_count; e++)
+	{
+		if (enemies[e].active == ACTIVE)
+		{
+			if (enemies[e].enemy_type == SIMPLE)
+			{
+				for (int b = 0; b < 255; b++)
+				{
+					if (bullets[b].active == ACTIVE)
+					{
+						if (bullet_hit_enemy(&bullets[b],&enemies[e]))
+						{
+							bullets[b].active = NONACTIVE;
+							enemies[e].active = NONACTIVE;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// ------------------------ END COLLISION ------------------
 
 void init()
 {
@@ -101,11 +178,15 @@ void init()
 		smoke_particles[i] = s;
 	}
 
+	// add simple enemies
 	for (i = 0; i < SIMPLE_ENEMY_MAX_AMOUNT; i++)
 	{
 		ENEMY_SPRITE e = {ACTIVE, SIMPLE, 20 * i + 10, 10, RGBA8(245, 90, 66, 255), 1.0};
-		simple_enemies[i] = e;
+		enemies[i] = e;
+		enemy_count++;
 	}
+
+	//TODO add other enemies
 }
 
 void update()
@@ -152,6 +233,8 @@ void update()
 		}
 	}
 
+	check_bullet_collisions();
+
 	for (int i = 0; i < 255; i++)
 	{
 		bullets[i].y -= bullets[i].movement_speed * (deltaTime / 1000.0);
@@ -179,15 +262,7 @@ void draw()
 	sprites_draw_player(player_x, player_y, PLAYER_SCALE);
 	// vita2d_draw_rectangle(x2_pos, y2_pos, (float)10, (float)10, RGBA8(169, 60, 23, 255));
 
-	vita2d_draw_rectangle(300, 50, 30, 30, RGBA8(255, 0, 255, 255));
-
-	size_t collision_player = toolbox_is_collision(player_x, player_y - (PLAYER_SCALE * SHIP_HEIGHT)/2,SHIP_WIDTH * PLAYER_SCALE, SHIP_HEIGHT * PLAYER_SCALE, 300+15,50+15,30,30);
-	if (collision_player)
-	{
-		vita2d_pgf_draw_text(pgf, 700, 30, RGBA8(0, 255, 0, 255), 1.0f, "collision");
-	} else {
-		vita2d_pgf_draw_text(pgf, 700, 30, RGBA8(0, 255, 0, 255), 1.0f, "no col");
-	}
+	// vita2d_draw_rectangle(300, 50, 30, 30, RGBA8(255, 0, 255, 255));
 
 	char fps[15] = "fps: ";
 	sprintf(fps, "%d", timing_get_fps(deltaTime));
@@ -204,9 +279,9 @@ void draw()
 		sprites_draw_smoke_circle(&smoke_particles[i]);
 	}
 
-	for (int i = 0; i < SIMPLE_ENEMY_MAX_AMOUNT; i++)
+	for (int i = 0; i < enemy_count; i++)
 	{
-		sprites_draw_enemy(&simple_enemies[i]);
+		sprites_draw_enemy(&enemies[i]);
 	}
 
 	vita2d_end_drawing();

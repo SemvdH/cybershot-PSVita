@@ -13,7 +13,7 @@
 #define SHIP_SECONDARY_COLOR RGBA8(153, 153, 153, 255)
 #define SHIP_PRIMARY_COLOR RGBA8(0, 255, 195, 255)
 
-#define SHIP_WIDTH 4 
+#define SHIP_WIDTH 4
 #define SHIP_HEIGHT 5
 
 #define BULLET_WIDTH 3
@@ -21,16 +21,17 @@
 
 #define PLAYER_SCALE 3.0
 
+#define SIMPLE_ENEMY_SIZE 9.0
+#define COMPLEX_ENEMY_SIZE 9.0
+
 #define SMOKE_START_RADIUS 8.0
 #define SMOKE_MAX_RADIUS 10.0
 #define SMOKE_DISSAPPEAR_SPEED 35.0
 
-#define SIMPLE_ENEMY_MAX_AMOUNT 10
-
 typedef enum
 {
     SIMPLE,
-    COMPLEX 
+    COMPLEX
 } ENEMY_TYPE;
 
 typedef enum
@@ -45,28 +46,28 @@ typedef enum
  */
 typedef struct sprite_t
 {
-    SPRITE_ACTIVE active;        // whether or not the sprite should be drawn (0 or 1)
-    float x;              // the x position
-    float y;              // the y position
+    SPRITE_ACTIVE active; // whether or not the sprite should be drawn (0 or 1)
+    float x;              // the top left x position
+    float y;              // the top left y position
     unsigned int color;   // color of the sprite
     float movement_speed; // speed of the sprite (how much it should move each frame)
 } BULLET;
 
 typedef struct enemy_sprite_t
 {
-    SPRITE_ACTIVE active;              // whether or not the sprite should be drawn (0 or 1)
-    ENEMY_TYPE enemy_type;      // type of enemy
-    float x;                    // the x position
-    float y;                    // the y position
-    unsigned int color;         // color of the sprite
-    float movement_speed;       // speed of the sprite (how much it should move each frame)
+    SPRITE_ACTIVE active;  // whether or not the sprite should be drawn (0 or 1)
+    ENEMY_TYPE enemy_type; // type of enemy
+    float x;               // the center x position
+    float y;               // the center y position
+    unsigned int color;    // color of the sprite
+    float movement_speed;  // speed of the sprite (how much it should move each frame)
 } ENEMY_SPRITE;
 
 typedef struct smoke_particle_t
 {
-    SPRITE_ACTIVE active;              // whether or not to draw the smoke circle (0 or 1)
-    float x;                    // x position
-    float y;                    // y position
+    SPRITE_ACTIVE active;       // whether or not to draw the smoke circle (0 or 1)
+    float x;                    // center x position
+    float y;                    // center y position
     float radius;               // radius of circle
     int8_t explosion_direction; // wether the explosion is expanding or shrinking.
                                 // 1 = expanding, -1 = shrinking
