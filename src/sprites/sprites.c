@@ -39,6 +39,7 @@ void sprites_draw_player(float x, float y, float scale)
     vita2d_draw_line(x, y - 5.0 * scale, x + 1.0 * scale, y - 4.0 * scale, SHIP_PRIMARY_COLOR);
     vita2d_draw_line(x + 1.0 * scale, y - 4.0 * scale, x + 1.0 * scale, y - 2.0 * scale, SHIP_PRIMARY_COLOR);
     vita2d_draw_line(x + 1.0 * scale, y - 2.0 * scale, x + 2.0 * scale, y, SHIP_PRIMARY_COLOR);
+    
 }
 
 void sprites_draw_enemy(ENEMY_SPRITE *enemy)
