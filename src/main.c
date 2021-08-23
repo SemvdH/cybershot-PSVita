@@ -327,7 +327,7 @@ void update()
 
 void draw_start()
 {
-	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, "start");
+	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, "Cybershot");
 }
 
 void draw_menu()
