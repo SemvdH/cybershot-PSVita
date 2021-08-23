@@ -31,17 +31,17 @@ typedef enum
 	GAMEOVER
 } game_state;
 
-uint8_t running = 1, drawing_circle = 0;
+uint8_t running, drawing_circle;
 game_state current_state = START;
 
 stick_data left_stick = {0, 0}, right_stick = {0, 0};
 SceCtrlData pad;
-uint8_t cross_pressed = 0;
+uint8_t cross_pressed;
 
-uint8_t current_bullet = 0;
+uint8_t current_bullet;
 BULLET bullets[255];
 
-uint8_t current_smoke_particle = 0;
+uint8_t current_smoke_particle;
 SMOKE_PARTICLE smoke_particles[255];
 
 vita2d_pgf *pgf;
@@ -50,12 +50,12 @@ vita2d_pvf *pvf;
 SceUInt64 deltaTime = 0; // delta time in ms
 SceKernelSysClock sysclock;
 timing_timer bullet_timer = {0, 250, 0};				  // 0 as starting time, 250 ms timeout, not elapsed
-timing_timer menu_switch_input_delay_timer = {0, 100, 0}; // 0 as starting time, 100 ms timeout, not elapsed
+timing_timer menu_switch_input_delay_timer = {0, 200, 0}; // 0 as starting time, 100 ms timeout, not elapsed
 
 ENEMY_SPRITE enemies[SIMPLE_ENEMY_MAX_AMOUNT];
-uint32_t enemy_count = 0;
+uint32_t enemy_count;
 
-float player_x = 300, player_y = 50, x2_pos = 400, y2_pos = 50, radius = 5.0;
+float player_x, player_y, x2_pos, y2_pos, radius;
 
 /**
  * @brief should be called when an unhandlable exception or error occurs. Triggers coredump.
@@ -69,9 +69,55 @@ __attribute__((__noreturn__)) void shit_yourself(void)
 	}
 }
 
+/**
+ * @brief initializes all variables
+ */
+void init_variables()
+{
+	running = 1;
+	drawing_circle = 0;
+	cross_pressed = 0;
+	current_bullet = 0;
+	current_smoke_particle = 0;
+	enemy_count = 0;
+	player_x = 300;
+	player_y = 50;
+	x2_pos = 400;
+	y2_pos = 50;
+	radius = 5.0;
+}
+
+
 // ################################################################
 // ------------------------ GENERATE SPRITES ------------------
 // ################################################################
+
+/**
+ * @brief initializes the sprites
+ */
+void init_sprites()
+{
+	int i;
+	for (i = 0; i < 255; i++)
+	{
+		BULLET temp = {NONACTIVE, 0, 100, RGBA8(0, i, 255, 255), 300.0};
+		bullets[i] = temp;
+	}
+
+	for (i = 0; i < 255; i++)
+	{
+		SMOKE_PARTICLE s = {NONACTIVE, 0, 0, SMOKE_START_RADIUS};
+		smoke_particles[i] = s;
+	}
+
+	// add simple enemies
+	for (i = 0; i < SIMPLE_ENEMY_MAX_AMOUNT; i++)
+	{
+		ENEMY_SPRITE e = {ACTIVE, SIMPLE, 20 * i + 10, 10, RGBA8(245, 90, 66, 255), 1.0};
+		enemies[i] = e;
+		enemy_count++;
+	}
+}
 
 void generate_bullet()
 {
@@ -206,6 +252,8 @@ SceBool check_player_collisions()
 // ------------------------ END COLLISION ------------------
 // ################################################################
 
+
+
 void init()
 {
 	/* to enable analog sampling */
@@ -213,31 +261,14 @@ void init()
 
 	vita2d_init();
 	vita2d_set_clear_color(RGBA8(0x40, 0x40, 0x40, 0xFF));
+	init_variables();
 
 	pgf = vita2d_load_default_pgf();
 	pvf = vita2d_load_default_pvf();
 
 	memset(&pad, 0, sizeof(pad));
-	int i;
-	for (i = 0; i < 255; i++)
-	{
-		BULLET temp = {NONACTIVE, 0, 100, RGBA8(0, i, 255, 255), 300.0};
-		bullets[i] = temp;
-	}
-
-	for (i = 0; i < 255; i++)
-	{
-		SMOKE_PARTICLE s = {NONACTIVE, 0, 0, SMOKE_START_RADIUS};
-		smoke_particles[i] = s;
-	}
-
-	// add simple enemies
-	for (i = 0; i < SIMPLE_ENEMY_MAX_AMOUNT; i++)
-	{
-		ENEMY_SPRITE e = {ACTIVE, SIMPLE, 20 * i + 10, 10, RGBA8(245, 90, 66, 255), 1.0};
-		enemies[i] = e;
-		enemy_count++;
-	}
+	
+	init_sprites();
 
 	//TODO add other enemies
 }
@@ -303,7 +334,7 @@ void update_game()
 		current_state = GAMEOVER;
 		return;
 	}
-	
+
 	check_bullet_collisions();
 
 	for (int i = 0; i < 255; i++)
@@ -327,6 +358,16 @@ void update_game()
 
 void update_gameover()
 {
+	timing_update_timer(&menu_switch_input_delay_timer, deltaTime);
+	timing_check_timer_elapsed(&menu_switch_input_delay_timer);
+	if (cross_pressed)
+		if (menu_switch_input_delay_timer.elapsed)
+		{
+			current_state = START;
+			init_variables();
+			init_sprites();
+			menu_switch_input_delay_timer.elapsed = 0;
+		}
 }
 
 void update()
@@ -414,7 +455,7 @@ void draw_game()
 
 void draw_gameover()
 {
-
+	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, "Game over");
 }
 
 void draw()
