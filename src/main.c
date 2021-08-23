@@ -20,9 +20,18 @@
 #define SCREEN_HEIGTH 544
 #define SCREEN_WIDTH 940
 #define SIMPLE_ENEMY_MAX_AMOUNT 20
-#define BULLET_MARGIN 5.0 // extra hitbox space to make sure bullets hit
+#define BULLET_MARGIN 5.0	 // extra hitbox space to make sure bullets hit
+#define MENU_SWITCH_DELAY 50 // delay in ms for when a menu screen is switched.
+
+typedef enum
+{
+	START,
+	MENU,
+	GAME
+} game_state;
 
 uint8_t running = 1, drawing_circle = 0;
+game_state current_state = START;
 
 stick_data left_stick = {0, 0}, right_stick = {0, 0};
 SceCtrlData pad;
@@ -39,9 +48,8 @@ vita2d_pvf *pvf;
 
 SceUInt64 deltaTime = 0; // delta time in ms
 SceKernelSysClock sysclock;
-timing_timer bullet_timer = {0, 250, 0}; // 0 as starting time, 400 ms timeout, not elapsed
-
-timer_t bullt = 0;
+timing_timer bullet_timer = {0, 250, 0};				  // 0 as starting time, 250 ms timeout, not elapsed
+timing_timer menu_switch_input_delay_timer = {0, 100, 0}; // 0 as starting time, 100 ms timeout, not elapsed
 
 ENEMY_SPRITE enemies[SIMPLE_ENEMY_MAX_AMOUNT];
 uint32_t enemy_count = 0;
@@ -60,7 +68,9 @@ __attribute__((__noreturn__)) void shit_yourself(void)
 	}
 }
 
+// ################################################################
 // ------------------------ GENERATE SPRITES ------------------
+// ################################################################
 
 void generate_bullet()
 {
@@ -82,9 +92,13 @@ void generate_smoke_particle()
 	current_smoke_particle = (current_smoke_particle + 1) % 254;
 }
 
+// ################################################################
 // ------------------------ END GENERATE SPRITES ------------------
+// ################################################################
 
+// ################################################################
 // ------------------------ COLLISION ------------------
+// ################################################################
 
 /**
  * @brief checks if a bullet has hit the given object
@@ -113,7 +127,8 @@ uint8_t bullet_hit_enemy(BULLET *bullet, ENEMY_SPRITE *enemy)
 	if (enemy->enemy_type == SIMPLE)
 	{
 		return bullet_is_collision(bullet, enemy->x, enemy->y, SIMPLE_ENEMY_SIZE, SIMPLE_ENEMY_SIZE);
-	} else if (enemy->enemy_type == COMPLEX)
+	}
+	else if (enemy->enemy_type == COMPLEX)
 	{
 		return bullet_is_collision(bullet, enemy->x, enemy->y, COMPLEX_ENEMY_SIZE, COMPLEX_ENEMY_SIZE);
 	}
@@ -138,7 +153,7 @@ void check_bullet_collisions()
 				{
 					if (bullets[b].active == ACTIVE)
 					{
-						if (bullet_hit_enemy(&bullets[b],&enemies[e]))
+						if (bullet_hit_enemy(&bullets[b], &enemies[e]))
 						{
 							bullets[b].active = NONACTIVE;
 							enemies[e].active = NONACTIVE;
@@ -151,7 +166,9 @@ void check_bullet_collisions()
 	}
 }
 
+// ################################################################
 // ------------------------ END COLLISION ------------------
+// ################################################################
 
 void init()
 {
@@ -189,25 +206,47 @@ void init()
 	//TODO add other enemies
 }
 
-void update()
+// ################################################################
+// ------------------------ UPDATE FUNCTIONS ------------------
+// ################################################################
+
+void update_start()
 {
-	deltaTime = timing_get_deltatime(&sysclock);
-	cross_pressed = 0;
-	if (deltaTime < 0)
-		shit_yourself();
+	timing_update_timer(&menu_switch_input_delay_timer, deltaTime);
+	timing_check_timer_elapsed(&menu_switch_input_delay_timer);
+	if (cross_pressed)
+		if (menu_switch_input_delay_timer.elapsed)
+		{
+			current_state = MENU;
+			menu_switch_input_delay_timer.elapsed = 0;
+		}
+}
 
-	sceCtrlPeekBufferPositive(0, &pad, 1);
+void update_menu()
+{
+	timing_update_timer(&menu_switch_input_delay_timer, deltaTime);
+	timing_check_timer_elapsed(&menu_switch_input_delay_timer);
 
-	if (pad.buttons & SCE_CTRL_START)
-		running = 0;
-	if (pad.buttons & SCE_CTRL_CROSS)
-		cross_pressed = 1;
+	if (cross_pressed)
+		if (menu_switch_input_delay_timer.elapsed)
+			current_state = GAME;
+}
+
+void update_game()
+{
 
 	timing_update_timer(&bullet_timer, deltaTime); // update timer
 	timing_check_timer_elapsed(&bullet_timer);
 
-	ctrl_input_get_leftstick(&pad, &left_stick);
-	// ctrl_input_get_rightstick(&pad, &right_stick);
+	if (cross_pressed)
+	{
+		if (bullet_timer.elapsed)
+		{
+			generate_bullet();
+			bullet_timer.elapsed = 0;
+			generate_smoke_particle();
+		}
+	}
 
 	if (abs(left_stick.x) > 15)
 		player_x += ctrl_input_calc_value(left_stick.x, deltaTime);
@@ -222,16 +261,6 @@ void update()
 		player_y = 0;
 	if (player_y >= SCREEN_HEIGTH)
 		player_y = SCREEN_HEIGTH - 1;
-
-	if (cross_pressed)
-	{
-		if (bullet_timer.elapsed)
-		{
-			generate_bullet();
-			bullet_timer.elapsed = 0;
-			generate_smoke_particle();
-		}
-	}
 
 	check_bullet_collisions();
 
@@ -254,11 +283,60 @@ void update()
 	}
 }
 
-void draw()
+void update()
 {
-	vita2d_start_drawing();
-	vita2d_clear_screen();
+	deltaTime = timing_get_deltatime(&sysclock);
+	cross_pressed = 0;
+	if (deltaTime < 0)
+		shit_yourself();
 
+	sceCtrlPeekBufferPositive(0, &pad, 1);
+
+	if (pad.buttons & SCE_CTRL_START)
+		running = 0;
+	if (pad.buttons & SCE_CTRL_CROSS)
+		cross_pressed = 1;
+
+	ctrl_input_get_leftstick(&pad, &left_stick);
+
+	// ctrl_input_get_rightstick(&pad, &right_stick);
+
+	switch (current_state)
+	{
+	case START:
+		update_start();
+		break;
+
+	case MENU:
+		update_menu();
+		break;
+
+	case GAME:
+		update_game();
+		break;
+	}
+}
+
+// ################################################################
+// ------------------------ END UPDATE FUNCTIONS ------------------
+// ################################################################
+
+// ################################################################
+// ------------------------ DRAW FUNCTIONS ------------------
+// ################################################################
+
+void draw_start()
+{
+	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, "start");
+}
+
+void draw_menu()
+{
+	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, "menu sletjes");
+}
+
+void draw_game()
+{
 	sprites_draw_player(player_x, player_y, PLAYER_SCALE);
 	// vita2d_draw_rectangle(x2_pos, y2_pos, (float)10, (float)10, RGBA8(169, 60, 23, 255));
 
@@ -283,10 +361,35 @@ void draw()
 	{
 		sprites_draw_enemy(&enemies[i]);
 	}
+}
+
+void draw()
+{
+	vita2d_start_drawing();
+	vita2d_clear_screen();
+
+	switch (current_state)
+	{
+	case START:
+		draw_start();
+		break;
+
+	case MENU:
+		draw_menu();
+		break;
+
+	case GAME:
+		draw_game();
+		break;
+	}
 
 	vita2d_end_drawing();
 	vita2d_swap_buffers();
 }
+
+// ################################################################
+// ------------------------ END DRAW FUNCTIONS ------------------
+// ################################################################
 
 int main(int argc, char *argv[])
 {
