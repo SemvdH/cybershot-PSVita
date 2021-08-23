@@ -27,7 +27,8 @@ typedef enum
 {
 	START,
 	MENU,
-	GAME
+	GAME,
+	GAMEOVER
 } game_state;
 
 uint8_t running = 1, drawing_circle = 0;
@@ -137,8 +138,7 @@ uint8_t bullet_hit_enemy(BULLET *bullet, ENEMY_SPRITE *enemy)
 }
 
 /**
- * @brief checks the collision for all bullets, also checks for:
- * - enemies
+ * @brief checks the collision for all bullets
  * 
  */
 void check_bullet_collisions()
@@ -164,6 +164,18 @@ void check_bullet_collisions()
 			}
 		}
 	}
+}
+
+/**
+ * @brief checks the collision for all enemies with the player
+ * 
+ * @returns true if there was a collision
+ */
+SceBool check_player_collisions()
+{
+	SceBool res = SCE_FALSE;
+
+	
 }
 
 // ################################################################
@@ -262,6 +274,12 @@ void update_game()
 	if (player_y >= SCREEN_HEIGTH)
 		player_y = SCREEN_HEIGTH - 1;
 
+	SceBool player_collision = check_player_collisions();
+	if (player_collision == SCE_TRUE)
+	{
+		current_state = GAMEOVER;
+		return;
+	}
 	check_bullet_collisions();
 
 	for (int i = 0; i < 255; i++)
@@ -281,6 +299,10 @@ void update_game()
 		if (smoke_particles[i].radius <= 0)
 			smoke_particles[i].active = 0;
 	}
+}
+
+void update_gameover()
+{
 }
 
 void update()
@@ -313,6 +335,9 @@ void update()
 
 	case GAME:
 		update_game();
+		break;
+	case GAMEOVER:
+		update_gameover();
 		break;
 	}
 }
