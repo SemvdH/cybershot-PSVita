@@ -137,6 +137,18 @@ uint8_t bullet_hit_enemy(BULLET *bullet, ENEMY_SPRITE *enemy)
 	return 0;
 }
 
+uint8_t enemy_hit_player(ENEMY_SPRITE *enemy)
+{
+	if (enemy->enemy_type == SIMPLE)
+	{
+		return toolbox_is_collision(enemy->x, enemy->y, SIMPLE_ENEMY_SIZE, SIMPLE_ENEMY_SIZE, player_x, player_y - PLAYER_Y_OFFSET, PLAYER_WIDTH, PLAYER_HEIGTH);
+	}
+	else if (enemy->enemy_type == COMPLEX)
+	{
+		return toolbox_is_collision(enemy->x, enemy->y, COMPLEX_ENEMY_SIZE, COMPLEX_ENEMY_SIZE, player_x, player_y - PLAYER_Y_OFFSET, PLAYER_WIDTH, PLAYER_HEIGTH);
+	}
+}
+
 /**
  * @brief checks the collision for all bullets
  * 
@@ -174,8 +186,18 @@ void check_bullet_collisions()
 SceBool check_player_collisions()
 {
 	SceBool res = SCE_FALSE;
-
-	
+	for (int i = 0; i < enemy_count; i++)
+	{
+		if (enemies[i].active == ACTIVE)
+		{
+			if (enemy_hit_player(&enemies[i]))
+			{
+				res = SCE_TRUE;
+				break;
+			}
+		}
+	}
+	return res;
 }
 
 // ################################################################
@@ -274,12 +296,12 @@ void update_game()
 	if (player_y >= SCREEN_HEIGTH)
 		player_y = SCREEN_HEIGTH - 1;
 
-	SceBool player_collision = check_player_collisions();
-	if (player_collision == SCE_TRUE)
+	if (check_player_collisions() == SCE_TRUE)
 	{
 		current_state = GAMEOVER;
 		return;
 	}
+	
 	check_bullet_collisions();
 
 	for (int i = 0; i < 255; i++)

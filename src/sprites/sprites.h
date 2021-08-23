@@ -20,6 +20,9 @@
 #define BULLET_HEIGTH 8
 
 #define PLAYER_SCALE 3.0
+#define PLAYER_WIDTH (2.0 * 2 * PLAYER_SCALE)
+#define PLAYER_HEIGTH (5.0 * PLAYER_SCALE)
+#define PLAYER_Y_OFFSET (PLAYER_HEIGTH / 2) // the center y of the player is in the middle
 
 #define SIMPLE_ENEMY_SIZE 9.0
 #define COMPLEX_ENEMY_SIZE 9.0
