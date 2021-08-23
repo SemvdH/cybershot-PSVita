@@ -51,11 +51,14 @@ SceUInt64 deltaTime = 0; // delta time in ms
 SceKernelSysClock sysclock;
 timing_timer bullet_timer = {0, 250, 0};				  // 0 as starting time, 250 ms timeout, not elapsed
 timing_timer menu_switch_input_delay_timer = {0, 200, 0}; // 0 as starting time, 100 ms timeout, not elapsed
+timing_timer score_timer = {0, 100, 0};
 
 ENEMY_SPRITE enemies[SIMPLE_ENEMY_MAX_AMOUNT];
 uint32_t enemy_count;
 
-float player_x, player_y, x2_pos, y2_pos, radius;
+int score;
+
+float player_x, player_y, radius;
 
 /**
  * @brief should be called when an unhandlable exception or error occurs. Triggers coredump.
@@ -80,13 +83,11 @@ void init_variables()
 	current_bullet = 0;
 	current_smoke_particle = 0;
 	enemy_count = 0;
-	player_x = 300;
-	player_y = 50;
-	x2_pos = 400;
-	y2_pos = 50;
+	player_x = SCREEN_WIDTH / 2;
+	player_y = 500;
 	radius = 5.0;
+	score = 0;
 }
-
 
 // ################################################################
 // ------------------------ GENERATE SPRITES ------------------
@@ -217,6 +218,7 @@ void check_bullet_collisions()
 						{
 							bullets[b].active = NONACTIVE;
 							enemies[e].active = NONACTIVE;
+							score += 100;
 							break;
 						}
 					}
@@ -252,8 +254,6 @@ SceBool check_player_collisions()
 // ------------------------ END COLLISION ------------------
 // ################################################################
 
-
-
 void init()
 {
 	/* to enable analog sampling */
@@ -267,7 +267,7 @@ void init()
 	pvf = vita2d_load_default_pvf();
 
 	memset(&pad, 0, sizeof(pad));
-	
+
 	init_sprites();
 
 	//TODO add other enemies
@@ -304,6 +304,8 @@ void update_game()
 
 	timing_update_timer(&bullet_timer, deltaTime); // update timer
 	timing_check_timer_elapsed(&bullet_timer);
+	timing_update_timer(&score_timer, deltaTime);
+	timing_check_timer_elapsed(&score_timer);
 
 	if (cross_pressed)
 	{
@@ -335,6 +337,9 @@ void update_game()
 		menu_switch_input_delay_timer.elapsed = 0;
 		return;
 	}
+	
+	if (score_timer.elapsed)
+		score += 1;
 
 	check_bullet_collisions();
 
@@ -452,11 +457,18 @@ void draw_game()
 	{
 		sprites_draw_enemy(&enemies[i]);
 	}
+
+	char score_text[40];
+	sprintf(score_text,"score: %07d",score);
+	vita2d_pvf_draw_text(pvf, 700, 100, RGBA8(0, 255, 0, 255), 1.0f, score_text);
 }
 
 void draw_gameover()
 {
+	char score_text[40];
+	sprintf(score_text,"score: %07d",score);
 	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, "Game over");
+	vita2d_pvf_draw_text(pvf, 700, 100, RGBA8(0, 255, 0, 255), 1.0f, score_text);
 }
 
 void draw()
