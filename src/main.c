@@ -332,6 +332,7 @@ void update_game()
 	if (check_player_collisions() == SCE_TRUE)
 	{
 		current_state = GAMEOVER;
+		menu_switch_input_delay_timer.elapsed = 0;
 		return;
 	}
 
