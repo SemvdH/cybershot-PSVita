@@ -147,6 +147,8 @@ uint8_t enemy_hit_player(ENEMY_SPRITE *enemy)
 	{
 		return toolbox_is_collision(enemy->x, enemy->y, COMPLEX_ENEMY_SIZE, COMPLEX_ENEMY_SIZE, player_x, player_y - PLAYER_Y_OFFSET, PLAYER_WIDTH, PLAYER_HEIGTH);
 	}
+
+	return 0;
 }
 
 /**
@@ -410,6 +412,11 @@ void draw_game()
 	}
 }
 
+void draw_gameover()
+{
+
+}
+
 void draw()
 {
 	vita2d_start_drawing();
@@ -427,6 +434,9 @@ void draw()
 
 	case GAME:
 		draw_game();
+		break;
+	case GAMEOVER:
+		draw_gameover();
 		break;
 	}
 
