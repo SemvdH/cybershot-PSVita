@@ -115,7 +115,7 @@ void init_sprites()
 	// add simple enemies
 	for (i = 0; i < SIMPLE_ENEMY_MAX_AMOUNT; i++)
 	{
-		ENEMY_SPRITE e = {NONACTIVE, SIMPLE, 20 * i + 10, 10, RGBA8(245, 90, 66, 255), 1.0};
+		ENEMY_SPRITE e = {NONACTIVE, SIMPLE, 0,0, SIMPLE_ENEMY_COLOR, SIMPLE_ENEMY_MOVEMENT_SPEED};
 		enemies[i] = e;
 		enemy_count++;
 	}

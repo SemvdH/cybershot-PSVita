@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <psp2/ctrl.h>
 
+#define PLAYER_SPEED 1.5
+
 /**
  * @brief a struct that holds the x and y pos for a stick. < 0 is left or down, > 0 is right or up. Value goes from 0 to 128
  * 

@@ -25,6 +25,8 @@
 #define PLAYER_Y_OFFSET (PLAYER_HEIGTH / 2) // the center y of the player is in the middle
 
 #define SIMPLE_ENEMY_SIZE 9.0
+#define SIMPLE_ENEMY_MOVEMENT_SPEED 1.5
+#define SIMPLE_ENEMY_COLOR (RGBA8(245, 90, 66, 255))
 #define COMPLEX_ENEMY_SIZE 9.0
 
 #define SMOKE_START_RADIUS 8.0

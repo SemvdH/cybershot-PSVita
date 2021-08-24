@@ -20,5 +20,5 @@ void ctrl_input_get_rightstick(SceCtrlData *pad, stick_data *stickdata)
 
 float ctrl_input_calc_value(int16_t pos, SceUInt64 deltaTime)
 {
-    return (float)((pos) * (deltaTime / 1000.0));
+    return (float)((pos) * (deltaTime / 1000.0)) * PLAYER_SPEED;
 }
