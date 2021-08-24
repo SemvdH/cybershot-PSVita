@@ -51,7 +51,8 @@ SceUInt64 deltaTime = 0; // delta time in ms
 SceKernelSysClock sysclock;
 timing_timer bullet_timer = {0, 250, 0};				  // 0 as starting time, 250 ms timeout, not elapsed
 timing_timer menu_switch_input_delay_timer = {0, 200, 0}; // 0 as starting time, 100 ms timeout, not elapsed
-timing_timer score_timer = {0, 100, 0};
+timing_timer score_timer = {0, 100, 0};					  // timer to update score
+timing_timer enemy_spawn_timer = {0, 500, 0};			  // timer to spawn a new enemy
 
 ENEMY_SPRITE enemies[SIMPLE_ENEMY_MAX_AMOUNT];
 uint32_t enemy_count;
@@ -114,12 +115,16 @@ void init_sprites()
 	// add simple enemies
 	for (i = 0; i < SIMPLE_ENEMY_MAX_AMOUNT; i++)
 	{
-		ENEMY_SPRITE e = {ACTIVE, SIMPLE, 20 * i + 10, 10, RGBA8(245, 90, 66, 255), 1.0};
+		ENEMY_SPRITE e = {NONACTIVE, SIMPLE, 20 * i + 10, 10, RGBA8(245, 90, 66, 255), 1.0};
 		enemies[i] = e;
 		enemy_count++;
 	}
 }
 
+/**
+ * @brief generates a bullet
+ * 
+ */
 void generate_bullet()
 {
 	// {1, x1_pos, y1_pos, RGBA8(100, 100, 0, 255)};
@@ -130,6 +135,10 @@ void generate_bullet()
 	current_bullet = (current_bullet + 1) % 254;
 }
 
+/**
+ * @brief generates a smoke particle
+ * 
+ */
 void generate_smoke_particle()
 {
 	smoke_particles[current_smoke_particle].active = ACTIVE;
@@ -138,6 +147,24 @@ void generate_smoke_particle()
 	smoke_particles[current_smoke_particle].radius = SMOKE_START_RADIUS;
 	smoke_particles[current_smoke_particle].explosion_direction = 1;
 	current_smoke_particle = (current_smoke_particle + 1) % 254;
+}
+
+/**
+ * @brief generates a simple enemy
+ * 
+ */
+void generate_simple_enemy()
+{
+	for (int i = 0; i < SIMPLE_ENEMY_MAX_AMOUNT; i++)
+	{
+		if (enemies[i].active == NONACTIVE)
+		{
+			enemies[i].active = ACTIVE;
+			enemies[i].x = toolbox_random_float(0, SCREEN_WIDTH - 1);
+			enemies[i].y = 0;
+			break;
+		}
+	}
 }
 
 // ################################################################
@@ -306,6 +333,8 @@ void update_game()
 	timing_check_timer_elapsed(&bullet_timer);
 	timing_update_timer(&score_timer, deltaTime);
 	timing_check_timer_elapsed(&score_timer);
+	timing_update_timer(&enemy_spawn_timer, deltaTime);
+	timing_check_timer_elapsed(&enemy_spawn_timer);
 
 	if (cross_pressed)
 	{
@@ -337,7 +366,7 @@ void update_game()
 		menu_switch_input_delay_timer.elapsed = 0;
 		return;
 	}
-	
+
 	if (score_timer.elapsed)
 		score += 1;
 
@@ -359,6 +388,24 @@ void update_game()
 
 		if (smoke_particles[i].radius <= 0)
 			smoke_particles[i].active = 0;
+	}
+
+	if (enemy_spawn_timer.elapsed)
+	{
+		generate_simple_enemy();
+		enemy_spawn_timer.elapsed = 0;
+	}
+
+	for (int i = 0; i < SIMPLE_ENEMY_MAX_AMOUNT; i++)
+	{
+		if (enemies[i].active == ACTIVE)
+		{
+			enemies[i].y += enemies[i].movement_speed;
+			if (enemies[i].y >= SCREEN_HEIGTH + SIMPLE_ENEMY_SIZE)
+			{
+				enemies[i].active = NONACTIVE;
+			}
+		}
 	}
 }
 
@@ -459,14 +506,14 @@ void draw_game()
 	}
 
 	char score_text[40];
-	sprintf(score_text,"score: %07d",score);
+	sprintf(score_text, "score: %07d", score);
 	vita2d_pvf_draw_text(pvf, 700, 100, RGBA8(0, 255, 0, 255), 1.0f, score_text);
 }
 
 void draw_gameover()
 {
 	char score_text[40];
-	sprintf(score_text,"score: %07d",score);
+	sprintf(score_text, "score: %07d", score);
 	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, "Game over");
 	vita2d_pvf_draw_text(pvf, 700, 100, RGBA8(0, 255, 0, 255), 1.0f, score_text);
 }
