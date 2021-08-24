@@ -25,9 +25,15 @@
 #define PLAYER_Y_OFFSET (PLAYER_HEIGTH / 2) // the center y of the player is in the middle
 
 #define SIMPLE_ENEMY_SIZE 9.0
-#define SIMPLE_ENEMY_MOVEMENT_SPEED 1.5
+#define SIMPLE_ENEMY_MOVEMENT_SPEED 3.0
 #define SIMPLE_ENEMY_COLOR (RGBA8(245, 90, 66, 255))
-#define COMPLEX_ENEMY_SIZE 9.0
+#define SIMPLE_ENEMY_SCORE 100
+
+#define COMPLEX_ENEMY_SIZE 12.0
+#define COMPLEX_ENEMY_MOVEMENT_SPEED 5.0
+#define COMPLEX_ENEMY_COLOR (RGBA8(177, 235, 52,220))
+#define COMPLEX_ENEMY_SECONDARY_COLOR (RGBA8(152, 83, 181, 255))
+#define COMPLEX_ENEMY_SCORE 500
 
 #define SMOKE_START_RADIUS 8.0
 #define SMOKE_MAX_RADIUS 10.0
@@ -66,6 +72,7 @@ typedef struct enemy_sprite_t
     float y;               // the center y position
     unsigned int color;    // color of the sprite
     float movement_speed;  // speed of the sprite (how much it should move each frame)
+    int score;             // score you get when you kill an enemy
 } ENEMY_SPRITE;
 
 typedef struct smoke_particle_t

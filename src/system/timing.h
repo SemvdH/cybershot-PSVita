@@ -43,4 +43,5 @@ void timing_update_timer(timing_timer* timer, SceUInt64 dt);
  * @return uint8_t 0 if false, nonzero if true
  */
 uint8_t timing_check_timer_elapsed(timing_timer* timer);
+
 #endif

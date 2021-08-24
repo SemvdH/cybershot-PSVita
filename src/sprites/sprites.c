@@ -2,7 +2,7 @@
 
 #define printf psvDebugScreenPrintf
 
-void (*enemy_draw_functions[2])(ENEMY_SPRITE *enemy_sprite) = {sprites_draw_simple_enemy, sprites_draw_complex_enemy};
+void (*enemy_draw_functions[2])(ENEMY_SPRITE *enemy_sprite) = {sprites_draw_simple_enemy, sprites_draw_complex_enemy}; // function pointers to enemy draw functions
 
 void sprites_draw_bullet(BULLET *bullet)
 {
@@ -47,6 +47,7 @@ void sprites_draw_enemy(ENEMY_SPRITE *enemy)
     {
         (*enemy_draw_functions[enemy->enemy_type])(enemy);
     }
+
 }
 
 void sprites_draw_simple_enemy(ENEMY_SPRITE *enemy)
@@ -59,4 +60,8 @@ void sprites_draw_simple_enemy(ENEMY_SPRITE *enemy)
 
 void sprites_draw_complex_enemy(ENEMY_SPRITE *enemy)
 {
+    // vita2d_draw_fill_circle(enemy->x, enemy->y, 5, COMPLEX_ENEMY_SECONDARY_COLOR);
+    vita2d_draw_line(enemy->x - 8, enemy->y - 6, enemy->x + 8, enemy->y - 6, COMPLEX_ENEMY_COLOR);
+    vita2d_draw_line(enemy->x + 8, enemy->y - 6, enemy->x, enemy->y + 8, COMPLEX_ENEMY_COLOR);
+    vita2d_draw_line(enemy->x, enemy->y + 8, enemy->x - 8, enemy->y - 6, COMPLEX_ENEMY_COLOR);
 }

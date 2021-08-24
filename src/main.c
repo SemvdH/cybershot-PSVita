@@ -1,3 +1,14 @@
+/*
+Cybershot ps vita main.c
+Made by Sem van der Hoeven
+*/
+
+//TODO tweak values
+//TODO create start screen
+//TODO make old school windows style interface / buttons etc
+//TODO create ship color select ?
+//TODO game over screen
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,13 +24,12 @@
 #include "system/timing.h"
 #include "system/control_input.h"
 
-// 14 april 2021: 11:00-15:00
-
 #define printf psvDebugScreenPrintf
 
 #define SCREEN_HEIGTH 544
 #define SCREEN_WIDTH 940
 #define SIMPLE_ENEMY_MAX_AMOUNT 20
+#define ENEMY_MAX_AMOUNT 40
 #define BULLET_MARGIN 5.0	 // extra hitbox space to make sure bullets hit
 #define MENU_SWITCH_DELAY 50 // delay in ms for when a menu screen is switched.
 
@@ -52,9 +62,10 @@ SceKernelSysClock sysclock;
 timing_timer bullet_timer = {0, 250, 0};				  // 0 as starting time, 250 ms timeout, not elapsed
 timing_timer menu_switch_input_delay_timer = {0, 200, 0}; // 0 as starting time, 100 ms timeout, not elapsed
 timing_timer score_timer = {0, 100, 0};					  // timer to update score
-timing_timer enemy_spawn_timer = {0, 500, 0};			  // timer to spawn a new enemy
+timing_timer simple_enemy_spawn_timer = {0, 500, 0};	  // timer to spawn a new simple enemy
+timing_timer complex_enemy_spawn_timer = {0, 2000, 0};	  // timer to spawn a new complex enemy
 
-ENEMY_SPRITE enemies[SIMPLE_ENEMY_MAX_AMOUNT];
+ENEMY_SPRITE enemies[ENEMY_MAX_AMOUNT];
 uint32_t enemy_count;
 
 int score;
@@ -115,7 +126,13 @@ void init_sprites()
 	// add simple enemies
 	for (i = 0; i < SIMPLE_ENEMY_MAX_AMOUNT; i++)
 	{
-		ENEMY_SPRITE e = {NONACTIVE, SIMPLE, 0,0, SIMPLE_ENEMY_COLOR, SIMPLE_ENEMY_MOVEMENT_SPEED};
+		ENEMY_SPRITE e = {NONACTIVE, SIMPLE, 0, 0, SIMPLE_ENEMY_COLOR, SIMPLE_ENEMY_MOVEMENT_SPEED, SIMPLE_ENEMY_SCORE};
+		enemies[i] = e;
+		enemy_count++;
+	}
+	for (i = SIMPLE_ENEMY_MAX_AMOUNT; i < ENEMY_MAX_AMOUNT; i++)
+	{
+		ENEMY_SPRITE e = {NONACTIVE, COMPLEX, 0, 0, COMPLEX_ENEMY_COLOR, COMPLEX_ENEMY_MOVEMENT_SPEED, COMPLEX_ENEMY_SCORE};
 		enemies[i] = e;
 		enemy_count++;
 	}
@@ -150,6 +167,17 @@ void generate_smoke_particle()
 }
 
 /**
+ * @brief generates an enemy
+ * 
+ * @param enemy the enemy to generate
+ */
+void generate_enemy(ENEMY_SPRITE *enemy)
+{
+	enemy->active = ACTIVE;
+	enemy->x = toolbox_random_float(0, SCREEN_WIDTH - 1);
+	enemy->y = 0;
+}
+/**
  * @brief generates a simple enemy
  * 
  */
@@ -159,9 +187,23 @@ void generate_simple_enemy()
 	{
 		if (enemies[i].active == NONACTIVE)
 		{
-			enemies[i].active = ACTIVE;
-			enemies[i].x = toolbox_random_float(0, SCREEN_WIDTH - 1);
-			enemies[i].y = 0;
+			generate_enemy(&enemies[i]);
+			break;
+		}
+	}
+}
+
+/**
+ * @brief generates a complex enemy
+ * 
+ */
+void generate_complex_enemy()
+{
+	for (int i = SIMPLE_ENEMY_MAX_AMOUNT; i < ENEMY_MAX_AMOUNT; i++)
+	{
+		if (enemies[i].active == NONACTIVE)
+		{
+			generate_enemy(&enemies[i]);
 			break;
 		}
 	}
@@ -235,19 +277,16 @@ void check_bullet_collisions()
 	{
 		if (enemies[e].active == ACTIVE)
 		{
-			if (enemies[e].enemy_type == SIMPLE)
+			for (int b = 0; b < 255; b++)
 			{
-				for (int b = 0; b < 255; b++)
+				if (bullets[b].active == ACTIVE)
 				{
-					if (bullets[b].active == ACTIVE)
+					if (bullet_hit_enemy(&bullets[b], &enemies[e]))
 					{
-						if (bullet_hit_enemy(&bullets[b], &enemies[e]))
-						{
-							bullets[b].active = NONACTIVE;
-							enemies[e].active = NONACTIVE;
-							score += 100;
-							break;
-						}
+						bullets[b].active = NONACTIVE;
+						enemies[e].active = NONACTIVE;
+						score += enemies[e].score;
+						break;
 					}
 				}
 			}
@@ -333,8 +372,10 @@ void update_game()
 	timing_check_timer_elapsed(&bullet_timer);
 	timing_update_timer(&score_timer, deltaTime);
 	timing_check_timer_elapsed(&score_timer);
-	timing_update_timer(&enemy_spawn_timer, deltaTime);
-	timing_check_timer_elapsed(&enemy_spawn_timer);
+	timing_update_timer(&simple_enemy_spawn_timer, deltaTime);
+	timing_check_timer_elapsed(&simple_enemy_spawn_timer);
+	timing_update_timer(&complex_enemy_spawn_timer, deltaTime);
+	timing_check_timer_elapsed(&complex_enemy_spawn_timer);
 
 	if (cross_pressed)
 	{
@@ -390,18 +431,24 @@ void update_game()
 			smoke_particles[i].active = 0;
 	}
 
-	if (enemy_spawn_timer.elapsed)
+	if (simple_enemy_spawn_timer.elapsed)
 	{
 		generate_simple_enemy();
-		enemy_spawn_timer.elapsed = 0;
+		simple_enemy_spawn_timer.elapsed = 0;
 	}
 
-	for (int i = 0; i < SIMPLE_ENEMY_MAX_AMOUNT; i++)
+	if (complex_enemy_spawn_timer.elapsed)
+	{
+		generate_complex_enemy();
+		complex_enemy_spawn_timer.elapsed = 0;
+	}
+
+	for (int i = 0; i < ENEMY_MAX_AMOUNT; i++)
 	{
 		if (enemies[i].active == ACTIVE)
 		{
 			enemies[i].y += enemies[i].movement_speed;
-			if (enemies[i].y >= SCREEN_HEIGTH + SIMPLE_ENEMY_SIZE)
+			if (enemies[i].y >= SCREEN_HEIGTH + COMPLEX_ENEMY_SIZE) // complex enemy is biggest
 			{
 				enemies[i].active = NONACTIVE;
 			}
@@ -508,6 +555,11 @@ void draw_game()
 	char score_text[40];
 	sprintf(score_text, "score: %07d", score);
 	vita2d_pvf_draw_text(pvf, 700, 100, RGBA8(0, 255, 0, 255), 1.0f, score_text);
+
+	for (int i = 0; i < 10; i++)
+	{
+		vita2d_draw_rectangle(i, i, SCREEN_WIDTH - 2*i, SCREEN_HEIGTH - 2*i,RGBA8(98, 124, 158,255));
+	}
 }
 
 void draw_gameover()
