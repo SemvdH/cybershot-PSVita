@@ -3,17 +3,17 @@
 
 #include <vita2d.h>
 
-/**
- * @brief draws a line with a specified width
- * 
- * @param x0 the start x coordinate of the line
- * @param y0 the start y coordinate of the line
- * @param x1 the end x coordinate of the line
- * @param y1 the end y coordinate of the line
- * @param thiccness the width of the line
- * @param color the color of the line
- */
-void drawing_draw_line_thiccness(float x0, float y0, float x1, float y1, int thiccness, unsigned int color);
+// /**
+//  * @brief draws a line with a specified width
+//  * 
+//  * @param x0 the start x coordinate of the line
+//  * @param y0 the start y coordinate of the line
+//  * @param x1 the end x coordinate of the line
+//  * @param y1 the end y coordinate of the line
+//  * @param thiccness the width of the line
+//  * @param color the color of the line
+//  */
+// void drawing_draw_line_thiccness(float x0, float y0, float x1, float y1, int thiccness, unsigned int color);
 
 /**
  * @brief draws an open rectangle

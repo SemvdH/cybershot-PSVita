@@ -284,6 +284,33 @@ src/system/timing.c.s:
 	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/system/timing.c.s
 .PHONY : src/system/timing.c.s
 
+src/toolbox/drawing.obj: src/toolbox/drawing.c.obj
+
+.PHONY : src/toolbox/drawing.obj
+
+# target to build an object file
+src/toolbox/drawing.c.obj:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/toolbox/drawing.c.obj
+.PHONY : src/toolbox/drawing.c.obj
+
+src/toolbox/drawing.i: src/toolbox/drawing.c.i
+
+.PHONY : src/toolbox/drawing.i
+
+# target to preprocess a source file
+src/toolbox/drawing.c.i:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/toolbox/drawing.c.i
+.PHONY : src/toolbox/drawing.c.i
+
+src/toolbox/drawing.s: src/toolbox/drawing.c.s
+
+.PHONY : src/toolbox/drawing.s
+
+# target to generate assembly for a file
+src/toolbox/drawing.c.s:
+	$(MAKE) -f CMakeFiles/cybershot.dir/build.make CMakeFiles/cybershot.dir/src/toolbox/drawing.c.s
+.PHONY : src/toolbox/drawing.c.s
+
 src/toolbox/toolbox.obj: src/toolbox/toolbox.c.obj
 
 .PHONY : src/toolbox/toolbox.obj
@@ -337,6 +364,9 @@ help:
 	@echo "... src/system/timing.obj"
 	@echo "... src/system/timing.i"
 	@echo "... src/system/timing.s"
+	@echo "... src/toolbox/drawing.obj"
+	@echo "... src/toolbox/drawing.i"
+	@echo "... src/toolbox/drawing.s"
 	@echo "... src/toolbox/toolbox.obj"
 	@echo "... src/toolbox/toolbox.i"
 	@echo "... src/toolbox/toolbox.s"

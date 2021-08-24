@@ -23,6 +23,7 @@ Made by Sem van der Hoeven
 #include "sprites/sprites.h"
 #include "system/timing.h"
 #include "system/control_input.h"
+#include "toolbox/drawing.h"
 
 #define printf psvDebugScreenPrintf
 
@@ -556,10 +557,7 @@ void draw_game()
 	sprintf(score_text, "score: %07d", score);
 	vita2d_pvf_draw_text(pvf, 700, 100, RGBA8(0, 255, 0, 255), 1.0f, score_text);
 
-	for (int i = 0; i < 10; i++)
-	{
-		vita2d_draw_rectangle(i, i, SCREEN_WIDTH - 2*i, SCREEN_HEIGTH - 2*i,RGBA8(98, 124, 158,255));
-	}
+	drawing_draw_rectangle_open(0, 0, SCREEN_WIDTH, SCREEN_HEIGTH, 10, RGBA8(98, 124, 158, 255));
 }
 
 void draw_gameover()
