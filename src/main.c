@@ -1,13 +1,7 @@
 /*
-Cybershot ps vita main.c
+Cybershot for PS Vita
 Made by Sem van der Hoeven
 */
-
-//TODO tweak values
-//TODO create start screen
-//TODO make old school windows style interface / buttons etc
-//TODO create ship color select ?
-//TODO game over screen
 
 #include <stdio.h>
 #include <stdlib.h>
