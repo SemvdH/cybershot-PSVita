@@ -22,7 +22,7 @@ Made by Sem van der Hoeven
 #define printf psvDebugScreenPrintf
 
 #define SCREEN_HEIGTH 544
-#define SCREEN_WIDTH 940
+#define SCREEN_WIDTH 960
 #define SIMPLE_ENEMY_MAX_AMOUNT 20
 #define ENEMY_MAX_AMOUNT 40
 #define BULLET_MARGIN 5.0	 // extra hitbox space to make sure bullets hit
@@ -551,7 +551,15 @@ void draw_game()
 	sprintf(score_text, "score: %07d", score);
 	vita2d_pvf_draw_text(pvf, 700, 100, RGBA8(0, 255, 0, 255), 1.0f, score_text);
 
-	drawing_draw_rectangle_open(0, 0, SCREEN_WIDTH, SCREEN_HEIGTH, 10, RGBA8(98, 124, 158, 255));
+	drawing_draw_rectangle_open(0, 0, SCREEN_WIDTH, SCREEN_HEIGTH, 10, MAIN_BORDER_COLOR);
+	drawing_draw_hline(0, 10, SCREEN_WIDTH, 10, MAIN_BORDER_COLOR);
+	for (int i = 0; i < 3; i++)
+	{
+		int box_x = SCREEN_WIDTH - 18 * i - 20;
+		vita2d_draw_rectangle(box_x, 2, 16, 16, SECONDARY_BORDER_COLOR);
+		drawing_draw_rectangle_open(box_x, 2, 16, 16, 2, COLOR_BLACK);
+	}
+	drawing_draw_rectangle_open(0, 0, SCREEN_WIDTH, SCREEN_HEIGTH, 3, COLOR_BLACK); // line around screen
 }
 
 void draw_gameover()

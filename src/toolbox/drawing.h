@@ -2,6 +2,9 @@
 #define DRAWING_H
 
 #include <vita2d.h>
+#define MAIN_BORDER_COLOR (RGBA8(98, 124, 158, 255))
+#define SECONDARY_BORDER_COLOR (RGBA8(181, 181, 181,255))
+#define COLOR_BLACK (RGBA8(0, 0, 0, 255))
 
 // /**
 //  * @brief draws a line with a specified width
@@ -26,5 +29,27 @@
  * @param color the color of the rectangle
  */
 void drawing_draw_rectangle_open(float x, float y, float width, float heigth, int thiccness, unsigned int color);
+
+/**
+ * @brief draws a horizontal line with the specified width and thiccness
+ * 
+ * @param x0 the start x position of the line
+ * @param y0 the start y position of the line
+ * @param width the width of the line
+ * @param thiccness the thiccness of the line
+ * @param color the color of the line
+ */
+void drawing_draw_hline(float x0, float y0, float width, int thiccness, unsigned int color);
+
+/**
+ * @brief draws a vertical line with the specified heigth and thiccness
+ * 
+ * @param x0 the start x pos of the line
+ * @param y0 the start y pos of the line
+ * @param height the heigth of the line
+ * @param thiccness the thiccness of the line
+ * @param color the color of the line
+ */
+void drawing_draw_vline(float x0, float y0, float height, int thiccness, unsigned int color);
 
 #endif // !DRAWING_H
