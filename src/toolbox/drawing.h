@@ -5,6 +5,7 @@
 #define MAIN_BORDER_COLOR (RGBA8(98, 124, 158, 255))
 #define SECONDARY_BORDER_COLOR (RGBA8(181, 181, 181,255))
 #define COLOR_BLACK (RGBA8(0, 0, 0, 255))
+#define COLOR_MAGENTA (RGBA8(251, 41, 255,255))
 
 // /**
 //  * @brief draws a line with a specified width

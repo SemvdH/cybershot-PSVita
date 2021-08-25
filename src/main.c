@@ -383,9 +383,23 @@ void update_game()
 	}
 
 	if (abs(left_stick.x) > 15)
+	{
 		player_x += ctrl_input_calc_value(left_stick.x, deltaTime);
+		//checks to make sure the player doesn't go behind the left and right bar
+		if (player_x < 10)
+			player_x = 10;
+		if (player_x > SCREEN_WIDTH - 10)
+			player_x = SCREEN_WIDTH - 10;
+	}
 	if (abs(left_stick.y) > 15)
+	{
 		player_y += ctrl_input_calc_value(left_stick.y, deltaTime);
+		// checks to make sure the player doesn't go behind the top and bottom bar
+		if (player_y > SCREEN_HEIGTH - 10)
+			player_y = SCREEN_HEIGTH - 10;
+		if (player_y < 30)
+			player_y = 30;
+	}
 
 	if (player_x <= 0)
 		player_x = 0;
@@ -527,11 +541,6 @@ void draw_game()
 
 	// vita2d_draw_rectangle(300, 50, 30, 30, RGBA8(255, 0, 255, 255));
 
-	char fps[15] = "fps: ";
-	sprintf(fps, "%d", timing_get_fps(deltaTime));
-
-	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, fps);
-
 	char timertext[100];
 	sprintf(timertext, "time %lu", bullet_timer.time);
 	vita2d_pgf_draw_text(pgf, 10, 30, RGBA8(0, 255, 150, 255), 1.0f, timertext);
@@ -552,14 +561,34 @@ void draw_game()
 	vita2d_pvf_draw_text(pvf, 700, 100, RGBA8(0, 255, 0, 255), 1.0f, score_text);
 
 	drawing_draw_rectangle_open(0, 0, SCREEN_WIDTH, SCREEN_HEIGTH, 10, MAIN_BORDER_COLOR);
-	drawing_draw_hline(0, 10, SCREEN_WIDTH, 10, MAIN_BORDER_COLOR);
+	drawing_draw_hline(0, 10, SCREEN_WIDTH, 20, MAIN_BORDER_COLOR);
 	for (int i = 0; i < 3; i++)
 	{
-		int box_x = SCREEN_WIDTH - 18 * i - 20;
-		vita2d_draw_rectangle(box_x, 2, 16, 16, SECONDARY_BORDER_COLOR);
-		drawing_draw_rectangle_open(box_x, 2, 16, 16, 2, COLOR_BLACK);
+		int box_x = SCREEN_WIDTH - 22 * i - 30;
+		vita2d_draw_rectangle(box_x, 6, 20, 20, SECONDARY_BORDER_COLOR);
+		drawing_draw_rectangle_open(box_x, 6, 20, 20, 2, COLOR_BLACK);
+		switch (i)
+		{
+		case 0:
+			for (int i = 0; i < 3; i++)
+			{
+				vita2d_draw_line(box_x + 4, 8 + i, box_x + 16, 20 + i, COLOR_MAGENTA);
+				vita2d_draw_line(box_x + 16, 8 + i, box_x + 4, 20 + i, COLOR_MAGENTA);
+			}
+			break;
+		case 1:
+			drawing_draw_rectangle_open(box_x + 4, 12, 12, 10, 3, COLOR_MAGENTA);
+			break;
+		case 2:
+			drawing_draw_hline(box_x + 4, 20, 12, 3, COLOR_MAGENTA);
+			break;
+		}
 	}
 	drawing_draw_rectangle_open(0, 0, SCREEN_WIDTH, SCREEN_HEIGTH, 3, COLOR_BLACK); // line around screen
+
+	char title_text[40];
+	sprintf(title_text, "CYBERSHOT_PSVITA - FPS: %d", timing_get_fps(deltaTime));
+	vita2d_pgf_draw_text(pgf, 20, 18, COLOR_MAGENTA, 0.8, title_text);
 }
 
 void draw_gameover()
