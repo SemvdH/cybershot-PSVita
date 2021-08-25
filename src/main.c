@@ -537,13 +537,6 @@ void draw_menu()
 void draw_game()
 {
 	sprites_draw_player(player_x, player_y, PLAYER_SCALE);
-	// vita2d_draw_rectangle(x2_pos, y2_pos, (float)10, (float)10, RGBA8(169, 60, 23, 255));
-
-	// vita2d_draw_rectangle(300, 50, 30, 30, RGBA8(255, 0, 255, 255));
-
-	char timertext[100];
-	sprintf(timertext, "time %lu", bullet_timer.time);
-	vita2d_pgf_draw_text(pgf, 10, 30, RGBA8(0, 255, 150, 255), 1.0f, timertext);
 
 	for (int i = 0; i < 255; i++)
 	{
@@ -556,39 +549,17 @@ void draw_game()
 		sprites_draw_enemy(&enemies[i]);
 	}
 
-	char score_text[40];
-	sprintf(score_text, "score: %07d", score);
-	vita2d_pvf_draw_text(pvf, 700, 100, RGBA8(0, 255, 0, 255), 1.0f, score_text);
+	drawing_draw_window_filled(20, 40, 160, 80, "SCORE", pgf, SECONDARY_BORDER_COLOR);
 
-	drawing_draw_rectangle_open(0, 0, SCREEN_WIDTH, SCREEN_HEIGTH, 10, MAIN_BORDER_COLOR);
-	drawing_draw_hline(0, 10, SCREEN_WIDTH, 20, MAIN_BORDER_COLOR);
-	for (int i = 0; i < 3; i++)
-	{
-		int box_x = SCREEN_WIDTH - 22 * i - 30;
-		vita2d_draw_rectangle(box_x, 6, 20, 20, SECONDARY_BORDER_COLOR);
-		drawing_draw_rectangle_open(box_x, 6, 20, 20, 2, COLOR_BLACK);
-		switch (i)
-		{
-		case 0:
-			for (int i = 0; i < 3; i++)
-			{
-				vita2d_draw_line(box_x + 4, 8 + i, box_x + 16, 20 + i, COLOR_MAGENTA);
-				vita2d_draw_line(box_x + 16, 8 + i, box_x + 4, 20 + i, COLOR_MAGENTA);
-			}
-			break;
-		case 1:
-			drawing_draw_rectangle_open(box_x + 4, 12, 12, 10, 3, COLOR_MAGENTA);
-			break;
-		case 2:
-			drawing_draw_hline(box_x + 4, 20, 12, 3, COLOR_MAGENTA);
-			break;
-		}
-	}
-	drawing_draw_rectangle_open(0, 0, SCREEN_WIDTH, SCREEN_HEIGTH, 3, COLOR_BLACK); // line around screen
+	char score_text[15];
+	sprintf(score_text, "%07d", score);
+	vita2d_pgf_draw_text(pgf, 42, 97, COLOR_BLACK, 1.2f, score_text);
+
 
 	char title_text[40];
 	sprintf(title_text, "CYBERSHOT_PSVITA - FPS: %d", timing_get_fps(deltaTime));
-	vita2d_pgf_draw_text(pgf, 20, 18, COLOR_MAGENTA, 0.8, title_text);
+
+	drawing_draw_window_clear(0, 0, SCREEN_WIDTH, SCREEN_HEIGTH, title_text, pgf);
 }
 
 void draw_gameover()
