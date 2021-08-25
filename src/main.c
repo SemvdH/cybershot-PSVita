@@ -55,10 +55,13 @@ vita2d_pvf *pvf;
 SceUInt64 deltaTime = 0; // delta time in ms
 SceKernelSysClock sysclock;
 timing_timer bullet_timer = {0, 250, 0};				  // 0 as starting time, 250 ms timeout, not elapsed
-timing_timer menu_switch_input_delay_timer = {0, 200, 0}; // 0 as starting time, 100 ms timeout, not elapsed
+timing_timer menu_switch_input_delay_timer = {0, 500, 0}; // 0 as starting time, 100 ms timeout, not elapsed
 timing_timer score_timer = {0, 100, 0};					  // timer to update score
 timing_timer simple_enemy_spawn_timer = {0, 500, 0};	  // timer to spawn a new simple enemy
 timing_timer complex_enemy_spawn_timer = {0, 2000, 0};	  // timer to spawn a new complex enemy
+
+timing_timer start_color_switch_timer = {0, 500, 0};	  // timer to switch color on the start menu
+SceBool start_color_set;								  // boolean to track if the title text should be colored or not
 
 ENEMY_SPRITE enemies[ENEMY_MAX_AMOUNT];
 uint32_t enemy_count;
@@ -94,6 +97,7 @@ void init_variables()
 	player_y = 500;
 	radius = 5.0;
 	score = 0;
+	start_color_set = SCE_FALSE;
 }
 
 // ################################################################
@@ -342,6 +346,15 @@ void update_start()
 {
 	timing_update_timer(&menu_switch_input_delay_timer, deltaTime);
 	timing_check_timer_elapsed(&menu_switch_input_delay_timer);
+	timing_update_timer(&start_color_switch_timer, deltaTime);
+	timing_check_timer_elapsed(&start_color_switch_timer);
+
+	if (start_color_switch_timer.elapsed)
+	{
+		start_color_set = !start_color_set;
+		start_color_switch_timer.elapsed = 0;
+	}
+
 	if (cross_pressed)
 		if (menu_switch_input_delay_timer.elapsed)
 		{
@@ -526,7 +539,20 @@ void update()
 
 void draw_start()
 {
-	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, "Cybershot");
+	unsigned int text_color;
+	unsigned int background_color;
+	if (start_color_set == SCE_TRUE)
+	{
+		text_color = COLOR_BLACK;
+		background_color = COLOR_CYAN;
+	}
+	else
+	{
+		background_color = COLOR_BLACK;
+		text_color = COLOR_CYAN;
+	}
+	drawing_draw_window_filled(SCREEN_WIDTH/2 - 300 / 2, 50, 300, 100, "Game Title", pgf, text_color);
+	vita2d_pgf_draw_text(pgf, SCREEN_WIDTH/2 - 300 / 2 + 47, 50 + 70, background_color, 2.0, "Cybershot");
 }
 
 void draw_menu()
