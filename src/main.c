@@ -553,6 +553,10 @@ void draw_start()
 	}
 	drawing_draw_window_filled(SCREEN_WIDTH/2 - 300 / 2, 50, 300, 100, "Game Title", pgf, text_color);
 	vita2d_pgf_draw_text(pgf, SCREEN_WIDTH/2 - 300 / 2 + 47, 50 + 70, background_color, 2.0, "Cybershot");
+
+	drawing_draw_window_filled(600, 400, 226, 80, "Message", pgf, SECONDARY_BORDER_COLOR);
+	vita2d_pgf_draw_text(pgf, 622, 457, COLOR_BLACK, 1.2f, "Press X to start");
+
 }
 
 void draw_menu()
