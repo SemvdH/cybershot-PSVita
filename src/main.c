@@ -60,8 +60,8 @@ timing_timer score_timer = {0, 100, 0};					  // timer to update score
 timing_timer simple_enemy_spawn_timer = {0, 500, 0};	  // timer to spawn a new simple enemy
 timing_timer complex_enemy_spawn_timer = {0, 2000, 0};	  // timer to spawn a new complex enemy
 
-timing_timer start_color_switch_timer = {0, 500, 0};	  // timer to switch color on the start menu
-SceBool start_color_set;								  // boolean to track if the title text should be colored or not
+timing_timer start_color_switch_timer = {0, 500, 0}; // timer to switch color on the start menu
+SceBool color_switch_value;							 // boolean to track if the title text should be colored or not
 
 ENEMY_SPRITE enemies[ENEMY_MAX_AMOUNT];
 uint32_t enemy_count;
@@ -69,6 +69,10 @@ uint32_t enemy_count;
 int score;
 
 float player_x, player_y, radius;
+
+uint8_t ship_color_select_colors[3] = {255, 0, 255}; // colors to select ship
+uint8_t menu_background_color[3] = {0, 255, 255};
+char menu_background_color_index; // 1 or -1, is used to cycle between the colors of the menu
 
 /**
  * @brief should be called when an unhandlable exception or error occurs. Triggers coredump.
@@ -97,7 +101,13 @@ void init_variables()
 	player_y = 500;
 	radius = 5.0;
 	score = 0;
-	start_color_set = SCE_FALSE;
+	color_switch_value = SCE_FALSE;
+	ship_color_select_colors[0] = 0;
+	ship_color_select_colors[1] = 255;
+	ship_color_select_colors[2] = 255;
+	menu_background_color[0] = 0;
+	menu_background_color[1] = 255;
+	menu_background_color_index = 1;
 }
 
 // ################################################################
@@ -351,7 +361,7 @@ void update_start()
 
 	if (start_color_switch_timer.elapsed)
 	{
-		start_color_set = !start_color_set;
+		color_switch_value = !color_switch_value;
 		start_color_switch_timer.elapsed = 0;
 	}
 
@@ -360,6 +370,8 @@ void update_start()
 		{
 			current_state = MENU;
 			menu_switch_input_delay_timer.elapsed = 0;
+			player_x = 700;
+			player_y = 300;
 		}
 }
 
@@ -367,10 +379,27 @@ void update_menu()
 {
 	timing_update_timer(&menu_switch_input_delay_timer, deltaTime);
 	timing_check_timer_elapsed(&menu_switch_input_delay_timer);
+	if (menu_background_color[0] == 254 || menu_background_color[0] == 1)
+	{
+		menu_background_color[0] += menu_background_color_index;
+		menu_background_color[1] -= menu_background_color_index;
+	}
+	else
+	{
+		menu_background_color[0] += menu_background_color_index * 2;
+		menu_background_color[1] -= menu_background_color_index * 2;
+	}
+
+	if (menu_background_color[0] == 0 || menu_background_color[1] == 0)
+		menu_background_color_index = -menu_background_color_index;
 
 	if (cross_pressed)
 		if (menu_switch_input_delay_timer.elapsed)
+		{
 			current_state = GAME;
+			player_x = SCREEN_WIDTH / 2;
+			player_y = 500;
+		}
 }
 
 void update_game()
@@ -541,7 +570,7 @@ void draw_start()
 {
 	unsigned int text_color;
 	unsigned int background_color;
-	if (start_color_set == SCE_TRUE)
+	if (color_switch_value == SCE_TRUE)
 	{
 		text_color = COLOR_BLACK;
 		background_color = COLOR_CYAN;
@@ -551,22 +580,31 @@ void draw_start()
 		background_color = COLOR_BLACK;
 		text_color = COLOR_CYAN;
 	}
-	drawing_draw_window_filled(SCREEN_WIDTH/2 - 300 / 2, 50, 300, 100, "Game Title", pgf, text_color);
-	vita2d_pgf_draw_text(pgf, SCREEN_WIDTH/2 - 300 / 2 + 47, 50 + 70, background_color, 2.0, "Cybershot");
+	drawing_draw_window_filled(SCREEN_WIDTH / 2 - 300 / 2, 50, 300, 100, "Game Title", pgf, background_color);
+	vita2d_pgf_draw_text(pgf, SCREEN_WIDTH / 2 - 300 / 2 + 47, 50 + 70, text_color, 2.0, "Cybershot");
 
-	drawing_draw_window_filled(600, 400, 226, 80, "Message", pgf, SECONDARY_BORDER_COLOR);
+	drawing_draw_window_filled(600, 400, 226, 80, "Message", pgf, SECONDARY_BORDER_COLOR); // width: 28 pixels for each character
 	vita2d_pgf_draw_text(pgf, 622, 457, COLOR_BLACK, 1.2f, "Press X to start");
-
 }
 
 void draw_menu()
 {
-	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, "menu sletjes");
+	drawing_draw_window_filled(SCREEN_WIDTH / 2 - 212 / 2, 50, 212, 100, "Window Title", pgf, RGBA8(menu_background_color[0], menu_background_color[1], menu_background_color[2], 255));
+	vita2d_pgf_draw_text(pgf, SCREEN_WIDTH / 2 - 212 / 2 + 47, 50 + 70, COLOR_BLACK, 2.0, "Menu");
+	drawing_draw_window_filled(600, 400, 226, 80, "Message", pgf, SECONDARY_BORDER_COLOR); // width: 28 pixels for each character
+	vita2d_pgf_draw_text(pgf, 622, 457, COLOR_BLACK, 1.2f, "Press X to start");
+	drawing_draw_window_filled(100, 200, 356, 120, "WIP", pgf, RGBA8(255, 0, 0, 255)); // width: 28 pixels for each character
+	vita2d_pgf_draw_text(pgf, 122, 257, COLOR_BLACK, 1.2f, "Menu will be\nadded later");
+
+	//draw warning triangle
+	drawing_draw_triangle(320, 240, 280, 300, 360, 300, 3, COLOR_BLACK);
+	drawing_draw_vline(320-1.5, 255, 30, 6, COLOR_BLACK);
+	vita2d_draw_rectangle(320-1.5, 290, 6, 6, COLOR_BLACK);
 }
 
 void draw_game()
 {
-	sprites_draw_player(player_x, player_y, PLAYER_SCALE);
+	sprites_draw_player(player_x, player_y, PLAYER_SCALE, RGBA8(ship_color_select_colors[0], ship_color_select_colors[1], ship_color_select_colors[2], 255));
 
 	for (int i = 0; i < 255; i++)
 	{
@@ -584,7 +622,6 @@ void draw_game()
 	char score_text[15];
 	sprintf(score_text, "%07d", score);
 	vita2d_pgf_draw_text(pgf, 42, 97, COLOR_BLACK, 1.2f, score_text);
-
 
 	char title_text[40];
 	sprintf(title_text, "CYBERSHOT_PSVITA - FPS: %d", timing_get_fps(deltaTime));

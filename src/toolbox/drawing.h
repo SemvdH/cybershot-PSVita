@@ -79,4 +79,31 @@ void drawing_draw_window_clear(float x, float y, float width, float heigth, cons
  */
 void drawing_draw_window_filled(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf, unsigned int color);
 
+/**
+ * @brief draws an open triangle with the given parameters
+ * 
+ * @param x0 the top x position
+ * @param y0 the top y position
+ * @param x1 the left x position
+ * @param y1 the left y position
+ * @param x2 the right x position
+ * @param y2 the right y position
+ * @param thiccness the width of the line of the triangle 
+ * @param color the color to draw the triangle with
+ */
+void drawing_draw_triangle(float x0, float y0, float x1, float y1, float x2, float y2, int thiccness, unsigned int color);
+
+/**
+ * @brief draws a filled triangle
+ * 
+ * @param x0 the top x position
+ * @param y0 the top y position
+ * @param x1 the left x position
+ * @param y1 the left y position
+ * @param x2 the right x position
+ * @param y2 the right y position
+ * @param color the color of the triangle
+ */
+void drawing_draw_triangle_filled(float x0, float y0, float x1, float y1, float x2, float y2, unsigned int color);
+
 #endif // !DRAWING_H

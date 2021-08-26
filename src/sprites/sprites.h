@@ -98,8 +98,9 @@ void sprites_draw_bullet(BULLET *bullet);
  * @param x the x position of the player
  * @param y the y position of the player
  * @param scale the scale of the ship
+ * @param color the color of the ship (rgb array)
  */
-void sprites_draw_player(float x, float y, float scale);
+void sprites_draw_player(float x, float y, float scale, unsigned int color);
 
 /**
  * @brief draws a smoke particle

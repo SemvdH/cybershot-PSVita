@@ -62,3 +62,45 @@ void drawing_draw_window_filled(float x, float y, float width, float heigth, con
     drawing_draw_window_clear(x, y, width, heigth, title_text, pgf);
     vita2d_draw_rectangle(x + 10, y + 30, width - 20, heigth - 40, color);
 }
+
+void drawing_draw_triangle(float x0, float y0, float x1, float y1, float x2, float y2, int thiccness, unsigned int color)
+{
+    for (int i = 0; i < thiccness; i++)
+    {
+        vita2d_draw_line(x0, y0 + i, x1, y1 + i, color);
+        vita2d_draw_line(x1, y1 + i, x2, y2 + i, color);
+        vita2d_draw_line(x2, y2 + i, x0, y0 + i, color);
+    }
+}
+
+void drawing_draw_triangle_filled(float x0, float y0, float x1, float y1, float x2, float y2, unsigned int color)
+{
+    vita2d_draw_line(x0, y0, x1, y1, color);
+    vita2d_draw_line(x1, y1, x2, y2, color);
+    vita2d_draw_line(x2, y2, x0, y0, color);
+
+    float x_start = x0;
+    float y_start = y0;
+    float x_end = x1;
+    float y_end = y1;
+    SceBool start_done = SCE_FALSE;
+    SceBool end_done = SCE_FALSE;
+
+    //something is not right with y_start
+    while (start_done == SCE_FALSE && end_done == SCE_FALSE)
+    {
+        if (x_start < x2)
+            x_start += 1.0;
+        if (y_start < y2)
+            y_start += 1.0;
+        if (x_end < x2)
+            x_end += 1.0;
+        if (y_end < y2)
+            y_end += 1.0;
+        if (x_start >= x2 && y_start >= y2)
+            start_done = SCE_TRUE;
+        if (x_end >= x2 && y_end >= x2)
+            end_done = SCE_TRUE;
+        vita2d_draw_line(x_start, y_start, x_end, y_end, color);
+    }
+}

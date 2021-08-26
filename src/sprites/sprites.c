@@ -20,7 +20,7 @@ void sprites_draw_smoke_circle(SMOKE_PARTICLE *smoke_particle)
     }
 }
 
-void sprites_draw_player(float x, float y, float scale)
+void sprites_draw_player(float x, float y, float scale,unsigned int color)
 {
     // bounding box: x -/+ 2.0 * scale, y - 5.0 * scale
 
@@ -30,15 +30,15 @@ void sprites_draw_player(float x, float y, float scale)
     vita2d_draw_line(x, y + random_size, x + 1.0 * scale, y, RGBA8(255, 0, 0, 200));
 
     //left side
-    vita2d_draw_line(x - 2.0 * scale, y, x + 2.0 * scale, y, SHIP_PRIMARY_COLOR);
-    vita2d_draw_line(x - 2.0 * scale, y, x - 1.0 * scale, y - 2.0 * scale, SHIP_PRIMARY_COLOR);
-    vita2d_draw_line(x - 1.0 * scale, y - 2.0 * scale, x - 1.0 * scale, y - 4.0 * scale, SHIP_PRIMARY_COLOR);
-    vita2d_draw_line(x - 1.0 * scale, y - 4.0 * scale, x, y - 5.0 * scale, SHIP_PRIMARY_COLOR);
+    vita2d_draw_line(x - 2.0 * scale, y, x + 2.0 * scale, y, color);
+    vita2d_draw_line(x - 2.0 * scale, y, x - 1.0 * scale, y - 2.0 * scale, color);
+    vita2d_draw_line(x - 1.0 * scale, y - 2.0 * scale, x - 1.0 * scale, y - 4.0 * scale, color);
+    vita2d_draw_line(x - 1.0 * scale, y - 4.0 * scale, x, y - 5.0 * scale, color);
 
     //right side
-    vita2d_draw_line(x, y - 5.0 * scale, x + 1.0 * scale, y - 4.0 * scale, SHIP_PRIMARY_COLOR);
-    vita2d_draw_line(x + 1.0 * scale, y - 4.0 * scale, x + 1.0 * scale, y - 2.0 * scale, SHIP_PRIMARY_COLOR);
-    vita2d_draw_line(x + 1.0 * scale, y - 2.0 * scale, x + 2.0 * scale, y, SHIP_PRIMARY_COLOR);
+    vita2d_draw_line(x, y - 5.0 * scale, x + 1.0 * scale, y - 4.0 * scale, color);
+    vita2d_draw_line(x + 1.0 * scale, y - 4.0 * scale, x + 1.0 * scale, y - 2.0 * scale, color);
+    vita2d_draw_line(x + 1.0 * scale, y - 2.0 * scale, x + 2.0 * scale, y, color);
 }
 
 void sprites_draw_enemy(ENEMY_SPRITE *enemy)
