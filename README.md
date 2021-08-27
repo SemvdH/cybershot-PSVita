@@ -1,7 +1,7 @@
 # cybershot-PSVita
 A Playstation Vita Homebrew game inspired by Atari games like Spider Fighter
 
-By sem van der Hoeven
+By Sem van der Hoeven
 
 ## Download
 Get the latest version at the [Releases page](https://github.com/SemvdH/cybershot-PSVita/releases)
