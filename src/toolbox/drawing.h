@@ -7,6 +7,7 @@
 #define COLOR_BLACK (RGBA8(0, 0, 0, 255))
 #define COLOR_MAGENTA (RGBA8(251, 41, 255,255))
 #define COLOR_CYAN (RGBA8(0, 255, 234,255))
+#define COLOR_RED (RGBA8(255,0,0,255))
 
 // /**
 //  * @brief draws a line with a specified width

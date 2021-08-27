@@ -511,6 +511,15 @@ void update_gameover()
 {
 	timing_update_timer(&menu_switch_input_delay_timer, deltaTime);
 	timing_check_timer_elapsed(&menu_switch_input_delay_timer);
+	timing_update_timer(&start_color_switch_timer, deltaTime);
+	timing_check_timer_elapsed(&start_color_switch_timer);
+
+	if (start_color_switch_timer.elapsed)
+	{
+		color_switch_value = !color_switch_value;
+		start_color_switch_timer.elapsed = 0;
+	}
+
 	if (cross_pressed)
 		if (menu_switch_input_delay_timer.elapsed)
 		{
@@ -598,8 +607,8 @@ void draw_menu()
 
 	//draw warning triangle
 	drawing_draw_triangle(320, 240, 280, 300, 360, 300, 3, COLOR_BLACK);
-	drawing_draw_vline(320-1.5, 255, 30, 6, COLOR_BLACK);
-	vita2d_draw_rectangle(320-1.5, 290, 6, 6, COLOR_BLACK);
+	drawing_draw_vline(320 - 1.5, 255, 30, 6, COLOR_BLACK);
+	vita2d_draw_rectangle(320 - 1.5, 290, 6, 6, COLOR_BLACK);
 }
 
 void draw_game()
@@ -631,10 +640,28 @@ void draw_game()
 
 void draw_gameover()
 {
-	char score_text[40];
-	sprintf(score_text, "score: %07d", score);
-	vita2d_pvf_draw_text(pvf, 700, 80, RGBA8(0, 255, 0, 255), 1.0f, "Game over");
-	vita2d_pvf_draw_text(pvf, 700, 100, RGBA8(0, 255, 0, 255), 1.0f, score_text);
+
+	unsigned int text_color;
+	unsigned int background_color;
+	if (color_switch_value == SCE_TRUE)
+	{
+		text_color = COLOR_BLACK;
+		background_color = COLOR_RED;
+	}
+	else
+	{
+		background_color = COLOR_BLACK;
+		text_color = COLOR_RED;
+	}
+
+	drawing_draw_window_filled(SCREEN_WIDTH / 2 - 300 / 2, 50, 300, 100, "You're dead", pgf, background_color);
+	vita2d_pgf_draw_text(pgf, SCREEN_WIDTH / 2 - 300 / 2 + 47, 50 + 70, text_color, 2.0, "Game Over");
+
+	drawing_draw_window_filled(300, 300, 160, 80, "SCORE", pgf, SECONDARY_BORDER_COLOR);
+
+	char score_text[15];
+	sprintf(score_text, "%07d", score);
+	vita2d_pgf_draw_text(pgf, 322, 357, COLOR_BLACK, 1.2f, score_text);
 }
 
 void draw()
