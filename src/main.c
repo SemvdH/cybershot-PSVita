@@ -539,7 +539,7 @@ void update()
 
 	sceCtrlPeekBufferPositive(0, &pad, 1);
 
-	if (pad.buttons & SCE_CTRL_START)
+	if (pad.buttons & SCE_CTRL_START && pad.buttons & SCE_CTRL_SELECT)
 		running = 0;
 	if (pad.buttons & SCE_CTRL_CROSS)
 		cross_pressed = 1;
