@@ -29,8 +29,18 @@ void drawing_draw_vline(float x0, float y0, float height, int thiccness, unsigne
 
 void drawing_draw_window_clear(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf)
 {
-    drawing_draw_rectangle_open(x, y, width, heigth, 10, MAIN_BORDER_COLOR);
-    drawing_draw_hline(x, y + 10, width, 20, MAIN_BORDER_COLOR);
+    drawing_draw_window(x,y,width,heigth,title_text,pgf,MAIN_BORDER_COLOR);
+}
+
+void drawing_draw_window_selected(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf)
+{
+    drawing_draw_window(x,y,width,heigth,title_text,pgf,SELECTED_BORDER_COLOR);
+}
+
+void drawing_draw_window(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf, unsigned int border_color)
+{
+    drawing_draw_rectangle_open(x, y, width, heigth, 10, border_color);
+    drawing_draw_hline(x, y + 10, width, 20, border_color);
     for (int i = 0; i < 3; i++)
     {
         int box_x = width - 22 * i - 30 + x;
@@ -60,6 +70,12 @@ void drawing_draw_window_clear(float x, float y, float width, float heigth, cons
 void drawing_draw_window_filled(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf, unsigned int color)
 {
     drawing_draw_window_clear(x, y, width, heigth, title_text, pgf);
+    vita2d_draw_rectangle(x + 10, y + 30, width - 20, heigth - 40, color);
+}
+
+void drawing_draw_selected_window_filled(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf, unsigned int color)
+{
+    drawing_draw_window_selected(x, y, width, heigth, title_text, pgf);
     vita2d_draw_rectangle(x + 10, y + 30, width - 20, heigth - 40, color);
 }
 

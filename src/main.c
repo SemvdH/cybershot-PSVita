@@ -25,8 +25,22 @@ Made by Sem van der Hoeven
 #define SCREEN_WIDTH 960
 #define SIMPLE_ENEMY_MAX_AMOUNT 20
 #define ENEMY_MAX_AMOUNT 40
-#define BULLET_MARGIN 5.0	 // extra hitbox space to make sure bullets hit
-#define MENU_SWITCH_DELAY 50 // delay in ms for when a menu screen is switched.
+#define BULLET_MARGIN 5.0 // extra hitbox space to make sure bullets hit
+
+#define MENU_SWITCH_DELAY 50	// delay in ms for when a menu screen is switched.
+#define MENU_LEFT_RIGHT_NONE 0	// not left or right pressed
+#define MENU_LEFT_RIGHT_LEFT 1	// left pressed
+#define MENU_LEFT_RIGHT_RIGHT 2 // right pressed
+
+/* 
+menu windows:
+|--------|	|------------|	|-----|
+|tutorial|	|color select|	|start|
+|--------|	|------------|	|-----|
+*/ 
+#define MENU_WINDOW_TUTORIAL 0
+#define MENU_WINDOW_COLOR_SELECT 1
+#define MENU_WINDOW_START 2
 
 typedef enum
 {
@@ -35,6 +49,13 @@ typedef enum
 	GAME,
 	GAMEOVER
 } game_state;
+
+typedef enum
+{
+	NONE,
+	SHIP_SELECT,
+	HOW_TO_PLAY
+} menu_window_state;
 
 uint8_t running, drawing_circle;
 game_state current_state = START;
@@ -70,9 +91,14 @@ int score;
 
 float player_x, player_y, radius;
 
+// ----------menu-----------
 uint8_t ship_color_select_colors[3] = {255, 0, 255}; // colors to select ship
 uint8_t menu_background_color[3] = {0, 255, 255};
 char menu_background_color_index; // 1 or -1, is used to cycle between the colors of the menu
+
+menu_window_state menu_active_window;
+uint8_t menu_selected_window; // 0 is how to play, 1 is ship color select, 2 is game
+uint8_t menu_left_right_pressed; // 0 is none, 1 is left, 2 is right
 
 /**
  * @brief should be called when an unhandlable exception or error occurs. Triggers coredump.
@@ -108,6 +134,9 @@ void init_variables()
 	menu_background_color[0] = 0;
 	menu_background_color[1] = 255;
 	menu_background_color_index = 1;
+	menu_active_window = NONE;
+	menu_selected_window = 0;
+	menu_left_right_pressed = 0;
 }
 
 // ################################################################
@@ -400,6 +429,25 @@ void update_menu()
 			player_x = SCREEN_WIDTH / 2;
 			player_y = 500;
 		}
+
+	if (menu_switch_input_delay_timer.elapsed)
+	{
+		if (menu_left_right_pressed == MENU_LEFT_RIGHT_LEFT) // left
+		{
+			menu_selected_window -= 1;
+			if (menu_selected_window < MENU_WINDOW_TUTORIAL)
+				menu_selected_window = MENU_WINDOW_START;
+			menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
+		}
+
+		if (menu_left_right_pressed == MENU_LEFT_RIGHT_RIGHT) // right
+		{
+			menu_selected_window += 1;
+			if (menu_selected_window > MENU_WINDOW_START)
+				menu_selected_window = MENU_WINDOW_TUTORIAL;
+			menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
+		}
+	}
 }
 
 void update_game()
@@ -544,6 +592,11 @@ void update()
 	if (pad.buttons & SCE_CTRL_CROSS)
 		cross_pressed = 1;
 
+	if (pad.buttons & SCE_CTRL_LEFT)
+		menu_left_right_pressed = MENU_LEFT_RIGHT_LEFT;
+	if (pad.buttons & SCE_CTRL_RIGHT)
+		menu_left_right_pressed = MENU_LEFT_RIGHT_RIGHT;
+
 	ctrl_input_get_leftstick(&pad, &left_stick);
 
 	// ctrl_input_get_rightstick(&pad, &right_stick);
@@ -598,6 +651,7 @@ void draw_start()
 
 void draw_menu()
 {
+	// TODO add windows for tutorial and color select, and make "press x to start" window just a "start" window
 	drawing_draw_window_filled(SCREEN_WIDTH / 2 - 212 / 2, 50, 212, 100, "Window Title", pgf, RGBA8(menu_background_color[0], menu_background_color[1], menu_background_color[2], 255));
 	vita2d_pgf_draw_text(pgf, SCREEN_WIDTH / 2 - 212 / 2 + 47, 50 + 70, COLOR_BLACK, 2.0, "Menu");
 	drawing_draw_window_filled(600, 400, 226, 80, "Message", pgf, SECONDARY_BORDER_COLOR); // width: 28 pixels for each character

@@ -3,6 +3,7 @@
 
 #include <vita2d.h>
 #define MAIN_BORDER_COLOR (RGBA8(98, 124, 158, 255))
+#define SELECTED_BORDER_COLOR (RGBA8(115, 115, 110,255))
 #define SECONDARY_BORDER_COLOR (RGBA8(181, 181, 181,255))
 #define COLOR_BLACK (RGBA8(0, 0, 0, 255))
 #define COLOR_MAGENTA (RGBA8(251, 41, 255,255))
@@ -68,6 +69,18 @@ void drawing_draw_vline(float x0, float y0, float height, int thiccness, unsigne
 void drawing_draw_window_clear(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf);
 
 /**
+ * @brief draws a selected window frame with the specified features
+ * 
+ * @param x the top left x position of the frame
+ * @param y the top left y position of the frame
+ * @param width the width of the frame
+ * @param heigth the heigth of the frame
+ * @param title_text the title text to be displayed at the top of the frame
+ * @param pgf pointer to the pgf font to be used
+ */
+void drawing_draw_window_selected(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf);
+
+/**
  * @brief draws a window frame with the specified features
  * 
  * @param x the top left x position of the frame
@@ -79,6 +92,19 @@ void drawing_draw_window_clear(float x, float y, float width, float heigth, cons
  * @param color the color of the background of the window
  */
 void drawing_draw_window_filled(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf, unsigned int color);
+
+/**
+ * @brief draws a selected window frame with the specified features
+ * 
+ * @param x the top left x position of the frame
+ * @param y the top left y position of the frame
+ * @param width the width of the frame
+ * @param heigth the heigth of the frame
+ * @param title_text the title text to be displayed at the top of the frame
+ * @param pgf pointer to the pgf font to be used
+ * @param color the color of the background of the window
+ */
+void drawing_draw_selected_window_filled(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf, unsigned int color);
 
 /**
  * @brief draws an open triangle with the given parameters
