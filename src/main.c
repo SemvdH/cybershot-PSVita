@@ -37,7 +37,7 @@ menu windows:
 |--------|	|------------|	|-----|
 |tutorial|	|color select|	|start|
 |--------|	|------------|	|-----|
-*/ 
+*/
 #define MENU_WINDOW_TUTORIAL 0
 #define MENU_WINDOW_COLOR_SELECT 1
 #define MENU_WINDOW_START 2
@@ -76,7 +76,7 @@ vita2d_pvf *pvf;
 SceUInt64 deltaTime = 0; // delta time in ms
 SceKernelSysClock sysclock;
 timing_timer bullet_timer = {0, 250, 0};				  // 0 as starting time, 250 ms timeout, not elapsed
-timing_timer menu_switch_input_delay_timer = {0, 500, 0}; // 0 as starting time, 100 ms timeout, not elapsed
+timing_timer menu_switch_input_delay_timer = {0, 500, 0}; // 0 as starting time, 500 ms timeout, not elapsed
 timing_timer score_timer = {0, 100, 0};					  // timer to update score
 timing_timer simple_enemy_spawn_timer = {0, 500, 0};	  // timer to spawn a new simple enemy
 timing_timer complex_enemy_spawn_timer = {0, 2000, 0};	  // timer to spawn a new complex enemy
@@ -97,8 +97,10 @@ uint8_t menu_background_color[3] = {0, 255, 255};
 char menu_background_color_index; // 1 or -1, is used to cycle between the colors of the menu
 
 menu_window_state menu_active_window;
-uint8_t menu_selected_window; // 0 is how to play, 1 is ship color select, 2 is game
-uint8_t menu_left_right_pressed; // 0 is none, 1 is left, 2 is right
+uint8_t menu_selected_window;									   // 0 is how to play, 1 is ship color select, 2 is game
+uint8_t menu_left_right_pressed;								   // 0 is none, 1 is left, 2 is right
+uint8_t last_menu_left_right_pressed;							   // what we pressed last update loop 
+timing_timer menu_selected_window_input_delay_timer = {0, 300, 0}; // 0 as starting time, 300 ms timeout, not elapsed
 
 /**
  * @brief should be called when an unhandlable exception or error occurs. Triggers coredump.
@@ -135,8 +137,9 @@ void init_variables()
 	menu_background_color[1] = 255;
 	menu_background_color_index = 1;
 	menu_active_window = NONE;
-	menu_selected_window = 0;
-	menu_left_right_pressed = 0;
+	menu_selected_window = MENU_WINDOW_TUTORIAL;
+	menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
+	last_menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
 }
 
 // ################################################################
@@ -408,6 +411,9 @@ void update_menu()
 {
 	timing_update_timer(&menu_switch_input_delay_timer, deltaTime);
 	timing_check_timer_elapsed(&menu_switch_input_delay_timer);
+	timing_update_timer(&menu_selected_window_input_delay_timer, deltaTime);
+	timing_check_timer_elapsed(&menu_selected_window_input_delay_timer);
+
 	if (menu_background_color[0] == 254 || menu_background_color[0] == 1)
 	{
 		menu_background_color[0] += menu_background_color_index;
@@ -430,22 +436,24 @@ void update_menu()
 			player_y = 500;
 		}
 
-	if (menu_switch_input_delay_timer.elapsed)
+	if (menu_selected_window_input_delay_timer.elapsed)
 	{
 		if (menu_left_right_pressed == MENU_LEFT_RIGHT_LEFT) // left
 		{
 			menu_selected_window -= 1;
-			if (menu_selected_window < MENU_WINDOW_TUTORIAL)
+			if (menu_selected_window == 255)
 				menu_selected_window = MENU_WINDOW_START;
 			menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
+			menu_selected_window_input_delay_timer.elapsed = 0;
 		}
 
 		if (menu_left_right_pressed == MENU_LEFT_RIGHT_RIGHT) // right
 		{
 			menu_selected_window += 1;
-			if (menu_selected_window > MENU_WINDOW_START)
+			if (menu_selected_window == 3)
 				menu_selected_window = MENU_WINDOW_TUTORIAL;
 			menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
+			menu_selected_window_input_delay_timer.elapsed = 0;
 		}
 	}
 }
@@ -592,10 +600,12 @@ void update()
 	if (pad.buttons & SCE_CTRL_CROSS)
 		cross_pressed = 1;
 
+//TODO check on button release?
 	if (pad.buttons & SCE_CTRL_LEFT)
 		menu_left_right_pressed = MENU_LEFT_RIGHT_LEFT;
 	if (pad.buttons & SCE_CTRL_RIGHT)
 		menu_left_right_pressed = MENU_LEFT_RIGHT_RIGHT;
+
 
 	ctrl_input_get_leftstick(&pad, &left_stick);
 
@@ -628,6 +638,7 @@ void update()
 // ------------------------ DRAW FUNCTIONS ------------------
 // ################################################################
 
+
 void draw_start()
 {
 	unsigned int text_color;
@@ -649,20 +660,67 @@ void draw_start()
 	vita2d_pgf_draw_text(pgf, 622, 457, COLOR_BLACK, 1.2f, "Press X to start");
 }
 
+void draw_menu_window_tutorial(uint8_t sel_window)
+{
+	if (sel_window == MENU_WINDOW_TUTORIAL)
+	{
+		drawing_draw_selected_window_filled(100, 200, 226, 80, "Tutorial", pgf, SECONDARY_BORDER_COLOR);
+	}
+	else
+	{
+		drawing_draw_window_filled(100, 200, 226, 80, "Tutorial", pgf, SECONDARY_BORDER_COLOR);
+	}
+
+	vita2d_pgf_draw_text(pgf, 122, 257, COLOR_BLACK, 1.2f, "How to play");
+}
+
+void draw_menu_window_color_select(uint8_t sel_window)
+{
+	if (sel_window == MENU_WINDOW_COLOR_SELECT)
+	{
+		drawing_draw_selected_window_filled(200, 300, 226, 80, "Make it pretty", pgf, SECONDARY_BORDER_COLOR);
+	}
+	else
+	{
+		drawing_draw_window_filled(200, 300, 226, 80, "Make it pretty", pgf, SECONDARY_BORDER_COLOR);
+	}
+
+	vita2d_pgf_draw_text(pgf, 222, 357, COLOR_BLACK, 1.2f, "Ship color select");
+}
+
+void draw_menu_window_start(uint8_t sel_window)
+{
+	if (sel_window == MENU_WINDOW_START)
+	{
+		drawing_draw_selected_window_filled(600, 400, 226, 80, "Message", pgf, SECONDARY_BORDER_COLOR);
+	}
+	else
+	{
+		drawing_draw_window_filled(600, 400, 226, 80, "Message", pgf, SECONDARY_BORDER_COLOR); // width: 28 pixels for each character
+	}
+
+	vita2d_pgf_draw_text(pgf, 622, 457, COLOR_BLACK, 1.2f, "Start");
+}
+
 void draw_menu()
 {
 	// TODO add windows for tutorial and color select, and make "press x to start" window just a "start" window
 	drawing_draw_window_filled(SCREEN_WIDTH / 2 - 212 / 2, 50, 212, 100, "Window Title", pgf, RGBA8(menu_background_color[0], menu_background_color[1], menu_background_color[2], 255));
 	vita2d_pgf_draw_text(pgf, SCREEN_WIDTH / 2 - 212 / 2 + 47, 50 + 70, COLOR_BLACK, 2.0, "Menu");
-	drawing_draw_window_filled(600, 400, 226, 80, "Message", pgf, SECONDARY_BORDER_COLOR); // width: 28 pixels for each character
-	vita2d_pgf_draw_text(pgf, 622, 457, COLOR_BLACK, 1.2f, "Press X to start");
-	drawing_draw_window_filled(100, 200, 356, 120, "WIP", pgf, RGBA8(255, 0, 0, 255)); // width: 28 pixels for each character
-	vita2d_pgf_draw_text(pgf, 122, 257, COLOR_BLACK, 1.2f, "Menu will be\nadded later");
+
+	draw_menu_window_tutorial(menu_selected_window);
+	draw_menu_window_color_select(menu_selected_window);
+	draw_menu_window_start(menu_selected_window);
+
+	// drawing_draw_window_filled(100, 200, 356, 120, "WIP", pgf, RGBA8(255, 0, 0, 255)); // width: 28 pixels for each character
+	char buf[80];
+	sprintf(buf, "sel menu %d", menu_selected_window);
+	vita2d_pgf_draw_text(pgf, 10, 10, COLOR_MAGENTA, 1.2f, buf);
 
 	//draw warning triangle
-	drawing_draw_triangle(320, 240, 280, 300, 360, 300, 3, COLOR_BLACK);
-	drawing_draw_vline(320 - 1.5, 255, 30, 6, COLOR_BLACK);
-	vita2d_draw_rectangle(320 - 1.5, 290, 6, 6, COLOR_BLACK);
+	// drawing_draw_triangle(320, 240, 280, 300, 360, 300, 3, COLOR_BLACK);
+	// drawing_draw_vline(320 - 1.5, 255, 30, 6, COLOR_BLACK);
+	// vita2d_draw_rectangle(320 - 1.5, 290, 6, 6, COLOR_BLACK);
 }
 
 void draw_game()

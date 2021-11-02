@@ -65,6 +65,19 @@ void drawing_draw_vline(float x0, float y0, float height, int thiccness, unsigne
  * @param heigth the heigth of the frame
  * @param title_text the title text to be displayed at the top of the frame
  * @param pgf pointer to the pgf font to be used
+ * @param border_color the color of the border
+ */
+void drawing_draw_window(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf, unsigned int border_color);
+
+/**
+ * @brief draws a window frame with the specified features
+ * 
+ * @param x the top left x position of the frame
+ * @param y the top left y position of the frame
+ * @param width the width of the frame
+ * @param heigth the heigth of the frame
+ * @param title_text the title text to be displayed at the top of the frame
+ * @param pgf pointer to the pgf font to be used
  */
 void drawing_draw_window_clear(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf);
 

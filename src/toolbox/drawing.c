@@ -27,15 +27,6 @@ void drawing_draw_vline(float x0, float y0, float height, int thiccness, unsigne
     }
 }
 
-void drawing_draw_window_clear(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf)
-{
-    drawing_draw_window(x,y,width,heigth,title_text,pgf,MAIN_BORDER_COLOR);
-}
-
-void drawing_draw_window_selected(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf)
-{
-    drawing_draw_window(x,y,width,heigth,title_text,pgf,SELECTED_BORDER_COLOR);
-}
 
 void drawing_draw_window(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf, unsigned int border_color)
 {
@@ -65,6 +56,16 @@ void drawing_draw_window(float x, float y, float width, float heigth, const char
     }
     drawing_draw_rectangle_open(x, y, width, heigth, 2, COLOR_BLACK); // line around screen
     vita2d_pgf_draw_text(pgf, x + 10, y + 23, COLOR_MAGENTA, 0.9, title_text);
+}
+
+void drawing_draw_window_clear(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf)
+{
+    drawing_draw_window(x,y,width,heigth,title_text,pgf,MAIN_BORDER_COLOR);
+}
+
+void drawing_draw_window_selected(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf)
+{
+    drawing_draw_window(x,y,width,heigth,title_text,pgf,SELECTED_BORDER_COLOR);
 }
 
 void drawing_draw_window_filled(float x, float y, float width, float heigth, const char *title_text, vita2d_pgf *pgf, unsigned int color)
