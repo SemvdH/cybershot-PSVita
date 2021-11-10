@@ -140,8 +140,7 @@ void init_variables()
 	menu_active_window = NONE;
 	menu_selected_window = MENU_WINDOW_TUTORIAL;
 	menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
-	last_menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
-	menu_needs_to_switch = 0;
+	last_menu_left_right_pressed = 0;
 }
 
 // ################################################################
@@ -442,28 +441,22 @@ void update_menu()
 	{
 		if (menu_left_right_pressed == MENU_LEFT_RIGHT_LEFT) // left
 		{
-			menu_needs_to_switch = !menu_needs_to_switch;
-			if (menu_needs_to_switch)
-			{
-				menu_selected_window -= 1;
-				if (menu_selected_window == 255)
-					menu_selected_window = MENU_WINDOW_START;
-				menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
-				menu_selected_window_input_delay_timer.elapsed = 0;
-			}
+
+			menu_selected_window -= 1;
+			if (menu_selected_window == 255)
+				menu_selected_window = MENU_WINDOW_START;
+			menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
+			menu_selected_window_input_delay_timer.elapsed = 0;
 		}
 
 		if (menu_left_right_pressed == MENU_LEFT_RIGHT_RIGHT) // right
 		{
-			menu_needs_to_switch = !menu_needs_to_switch;
-			if (menu_needs_to_switch)
-			{
-				menu_selected_window += 1;
-				if (menu_selected_window == 3)
-					menu_selected_window = MENU_WINDOW_TUTORIAL;
-				menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
-				menu_selected_window_input_delay_timer.elapsed = 0;
-			}
+
+			menu_selected_window += 1;
+			if (menu_selected_window == 3)
+				menu_selected_window = MENU_WINDOW_TUTORIAL;
+			menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
+			menu_selected_window_input_delay_timer.elapsed = 0;
 		}
 	}
 }
