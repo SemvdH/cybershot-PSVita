@@ -100,7 +100,6 @@ menu_window_state menu_active_window;
 uint8_t menu_selected_window;		  // 0 is how to play, 1 is ship color select, 2 is game
 uint8_t menu_left_right_pressed;	  // 0 is none, 1 is left, 2 is right
 uint8_t last_menu_left_right_pressed; // what we pressed last update loop
-uint8_t menu_needs_to_switch;
 timing_timer menu_selected_window_input_delay_timer = {0, 300, 0}; // 0 as starting time, 300 ms timeout, not elapsed
 
 /**
