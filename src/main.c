@@ -97,9 +97,10 @@ uint8_t menu_background_color[3] = {0, 255, 255};
 char menu_background_color_index; // 1 or -1, is used to cycle between the colors of the menu
 
 menu_window_state menu_active_window;
-uint8_t menu_selected_window;									   // 0 is how to play, 1 is ship color select, 2 is game
-uint8_t menu_left_right_pressed;								   // 0 is none, 1 is left, 2 is right
-uint8_t last_menu_left_right_pressed;							   // what we pressed last update loop 
+uint8_t menu_selected_window;		  // 0 is how to play, 1 is ship color select, 2 is game
+uint8_t menu_left_right_pressed;	  // 0 is none, 1 is left, 2 is right
+uint8_t last_menu_left_right_pressed; // what we pressed last update loop
+uint8_t menu_needs_to_switch;
 timing_timer menu_selected_window_input_delay_timer = {0, 300, 0}; // 0 as starting time, 300 ms timeout, not elapsed
 
 /**
@@ -140,6 +141,7 @@ void init_variables()
 	menu_selected_window = MENU_WINDOW_TUTORIAL;
 	menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
 	last_menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
+	menu_needs_to_switch = 0;
 }
 
 // ################################################################
@@ -440,20 +442,28 @@ void update_menu()
 	{
 		if (menu_left_right_pressed == MENU_LEFT_RIGHT_LEFT) // left
 		{
-			menu_selected_window -= 1;
-			if (menu_selected_window == 255)
-				menu_selected_window = MENU_WINDOW_START;
-			menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
-			menu_selected_window_input_delay_timer.elapsed = 0;
+			menu_needs_to_switch = !menu_needs_to_switch;
+			if (menu_needs_to_switch)
+			{
+				menu_selected_window -= 1;
+				if (menu_selected_window == 255)
+					menu_selected_window = MENU_WINDOW_START;
+				menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
+				menu_selected_window_input_delay_timer.elapsed = 0;
+			}
 		}
 
 		if (menu_left_right_pressed == MENU_LEFT_RIGHT_RIGHT) // right
 		{
-			menu_selected_window += 1;
-			if (menu_selected_window == 3)
-				menu_selected_window = MENU_WINDOW_TUTORIAL;
-			menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
-			menu_selected_window_input_delay_timer.elapsed = 0;
+			menu_needs_to_switch = !menu_needs_to_switch;
+			if (menu_needs_to_switch)
+			{
+				menu_selected_window += 1;
+				if (menu_selected_window == 3)
+					menu_selected_window = MENU_WINDOW_TUTORIAL;
+				menu_left_right_pressed = MENU_LEFT_RIGHT_NONE;
+				menu_selected_window_input_delay_timer.elapsed = 0;
+			}
 		}
 	}
 }
@@ -600,12 +610,11 @@ void update()
 	if (pad.buttons & SCE_CTRL_CROSS)
 		cross_pressed = 1;
 
-//TODO check on button release?
+	//TODO check on button release?
 	if (pad.buttons & SCE_CTRL_LEFT)
 		menu_left_right_pressed = MENU_LEFT_RIGHT_LEFT;
 	if (pad.buttons & SCE_CTRL_RIGHT)
 		menu_left_right_pressed = MENU_LEFT_RIGHT_RIGHT;
-
 
 	ctrl_input_get_leftstick(&pad, &left_stick);
 
@@ -637,7 +646,6 @@ void update()
 // ################################################################
 // ------------------------ DRAW FUNCTIONS ------------------
 // ################################################################
-
 
 void draw_start()
 {
