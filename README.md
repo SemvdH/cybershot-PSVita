@@ -1,3 +1,6 @@
+# Migration
+The code for this has been migrated to my [Gitea](https://gitty.interesting-corner.nl/sem/cybershot-PSVita) instance. This repo is now a public archive.
+
 # cybershot-PSVita
 A Playstation Vita Homebrew game inspired by Atari games like Spider Fighter
 
